@@ -369,11 +369,11 @@ class FreeplayState extends MusicBeatState
 					vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), ClientPrefs.instVolume);
 				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
-				vocals.volume = 0.7;
+				vocals.volume = ClientPrefs.vocalVolume;
 				instPlaying = curSelected;
 				#end
 			}
