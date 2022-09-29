@@ -1,3 +1,4 @@
+
 package options;
 
 #if desktop
@@ -72,6 +73,9 @@ class OptionsState extends MusicBeatState
 	var selectorRight:Alphabet;
 
 	override function create() {
+	    
+	    var optionText:FlxText;
+	    
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
@@ -91,7 +95,6 @@ class OptionsState extends MusicBeatState
 
 		for (i in 0...options.length)
 		{
-			var optionText:FlxText;
 			optionText = new FlxText(0, 0, 0, "", 35, true);
 			optionText.alignment = LEFT;
 			optionText.font = 'vcr.ttf';
