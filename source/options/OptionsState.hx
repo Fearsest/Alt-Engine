@@ -86,11 +86,16 @@ class OptionsState extends MusicBeatState
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+		
+		optionText.text = '';
 
 		for (i in 0...options.length)
 		{
-			var optionText:FlxText = new FlxText(0, 0, options[i], true, false);
-			optionText.setFormat(Paths.font('vcr.ttf'), 26, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			var optionText:FlxText;
+			optionText = new FlxText(0, 0, 0, "", 35, true);
+			optionText.alignment = LEFT;
+			optionText.font = 'vcr.ttf';
+			optionText.text += options[i];
 			optionText.screenCenter();
 			optionText.y += (80 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
