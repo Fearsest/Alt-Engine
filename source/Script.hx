@@ -1,8 +1,18 @@
 package song;
 
+#if android
+import android.Hardware;
+import android.Permissions;
+import android.os.Build;
+import android.os.Environment;
+#end
 import flixel.FlxBasic;
 import hscript.Interp;
 import openfl.Lib;
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
 
 class Script extends FlxBasic
 {
