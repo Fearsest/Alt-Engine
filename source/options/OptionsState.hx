@@ -1,4 +1,3 @@
-
 package options;
 
 #if desktop
@@ -93,7 +92,7 @@ class OptionsState extends MusicBeatState
 		
 		optionText.text = '';
 
-		for (i in 0...options.length)
+		for (i in options.length)
 		{
 			optionText = new FlxText(0, 0, 0, "", 35, true);
 			optionText.alignment = LEFT;
