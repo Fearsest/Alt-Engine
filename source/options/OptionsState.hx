@@ -29,7 +29,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay','Volume Options'];
+	var options:Array<String> = ['Note Colors', 'Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'Volume Options'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -64,6 +64,9 @@ class OptionsState extends MusicBeatState
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 			case 'Volume Options':
+				#if android
+				removeVirtualPad();
+				#end
 				openSubState(new options.VolumeOptionsSubState());
 		}
 	}
@@ -72,9 +75,6 @@ class OptionsState extends MusicBeatState
 	var selectorRight:Alphabet;
 
 	override function create() {
-	    
-	    var optionText:FlxText;
-	    
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
@@ -89,17 +89,12 @@ class OptionsState extends MusicBeatState
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
-		
-		optionText.text = '';
 
-		for (i in options.length)
+		for (i in 0...options.length)
 		{
-			optionText = new FlxText(0, 0, 0, "", 35, true);
-			optionText.alignment = LEFT;
-			optionText.font = 'vcr.ttf';
-			optionText.text += options[i];
+			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
 			optionText.screenCenter();
-			optionText.y += (80 * (i - (options.length / 2))) + 50;
+			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
 		}
 
