@@ -107,7 +107,7 @@ class StoryMenuState extends MusicBeatState
 				weekThing.targetY = num;
 				grpWeekText.add(weekThing);
 
-				weekThing.screenCenter(X);
+				// weekThing.screenCenter(X);
 				weekThing.antialiasing = ClientPrefs.globalAntialiasing;
 				// weekThing.updateHitbox();
 
@@ -171,10 +171,10 @@ class StoryMenuState extends MusicBeatState
 
 		var tracksSprite:FlxSprite = new FlxSprite(FlxG.width * 0.07, bgSprite.y + 425).loadGraphic(Paths.image('Menu_Tracks'));
 		tracksSprite.antialiasing = ClientPrefs.globalAntialiasing;
-		add(tracksSprite);
+		// add(tracksSprite);
 
-		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "", 32);
-		txtTracklist.alignment = CENTER;
+		txtTracklist = new FlxText(FlxG.width * 0.05, tracksSprite.y + 60, 0, "Week Tracks\n", 32);
+		txtTracklist.alignment = RIGHT;
 		txtTracklist.font = rankText.font;
 		txtTracklist.color = 0xFFe55777;
 		add(txtTracklist);
@@ -486,7 +486,7 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 
 		txtTracklist.screenCenter(X);
-		txtTracklist.x -= FlxG.width * 0.35;
+		txtTracklist.x += 480;
 
 		#if !switch
 		intendedScore = Highscore.getWeekScore(loadedWeeks[curWeek].fileName, curDifficulty);
