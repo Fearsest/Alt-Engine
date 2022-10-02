@@ -38,7 +38,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
-class HscriptHandler {
+class Script {
     public static function setVars(interp:Interp) {
         interp.variables.set('PlayState', PlayState);
         interp.variables.set('Character', Character);
