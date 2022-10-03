@@ -25,8 +25,6 @@ class ClientPrefs {
 	public static var instVolume:Float = 1;
 	public static var mainVolume:Float = 1;
 	public static var winIcon:Bool = false;
-	public static var instVolume:Float = 1;
-	public static var vocalVolume:Float = 1;
 	public static var noteOffset:Int = 0;
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	public static var ghostTapping:Bool = true;
