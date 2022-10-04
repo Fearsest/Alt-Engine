@@ -53,7 +53,7 @@ class HealthIcon extends FlxSprite
 			this.char = char;
 
 			antialiasing = ClientPrefs.globalAntialiasing;
-			if(ClientPrefs.winIcon != true && this.char != char){
+			if(ClientPrefs.winIcon == true && this.char != char){
 			var name:String = 'winicons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-face'; //Prevents crash from missing icon
