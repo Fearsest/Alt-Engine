@@ -185,17 +185,7 @@ class ChartingState extends MusicBeatState
 	public static var curQuant = 3;
 
 	public var quantizations:Array<Int> = [
-		4,
-		8,
-		12,
-		16,
-		20,
-		24,
-		32,
-		48,
-		64,
-		96,
-		192
+		16
 	];
 
 
