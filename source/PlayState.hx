@@ -3035,15 +3035,15 @@ class PlayState extends MusicBeatState
 
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
-		else if(healthBar.percent > 80 && ClientPrefs.winIcon == true)
-		iconP1.animation.curAnim.curFrame = 2;
+		else if (healthBar.percent > 80 && ClientPrefs.winIcon == true)
+		    iconP1.animation.curAnim.curFrame = 2;
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 			
 		if (healthBar.percent > 80)
 			iconP2.animation.curAnim.curFrame = 1;
-		else if(healthBar.percent < 20 && ClientPrefs.winIcon == true)
-		iconP2.animation.curAnim.curFrame = 2;
+		else if (healthBar.percent < 20 && ClientPrefs.winIcon == true)
+			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
 
@@ -3081,21 +3081,23 @@ class PlayState extends MusicBeatState
 					// trace('MISSED FRAME');
 				}
 
-				if(updateTime) {
+                if (updateTime)
+				{
 					var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
-					if(curTime < 0) curTime = 0;
+					if (curTime < 0)
+						curTime = 0;
 					songPercent = (curTime / songLength);
 
 					var songCalc:Float = (songLength - curTime);
-					if(ClientPrefs.timeBarType == 'Time Elapsed') songCalc = curTime;
+					if (ClientPrefs.timeBarType == 'Song Name')
+						songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
-					if(secondsTotal < 0) secondsTotal = 0;
-
-					if(ClientPrefs.timeBarType != 'Song Name')
-						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
-				}
-			}
+					if (secondsTotal < 0)
+						secondsTotal = 0;
+					else if (secondsTotal >= Math.floor(songLength / 1000))
+						secondsTotal = Math.floor(songLength / 1000);
+     				}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
