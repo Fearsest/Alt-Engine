@@ -365,7 +365,7 @@ class FreeplayState extends MusicBeatState
 		        timeText.alpha = 0;
 		        timeText.borderSize = 2;
 		        timeText.visible = true;
-		        timeText.text = PlayState.updateTime;
+		        timeText.text = PlayState;
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
