@@ -3081,23 +3081,21 @@ class PlayState extends MusicBeatState
 					// trace('MISSED FRAME');
 				}
 
-                if (updateTime)
-				{
+				if(updateTime) {
 					var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
-					if (curTime < 0)
-						curTime = 0;
+					if(curTime < 0) curTime = 0;
 					songPercent = (curTime / songLength);
 
 					var songCalc:Float = (songLength - curTime);
-					if (ClientPrefs.timeBarType == 'Song Name')
-						songCalc = curTime;
+					if(ClientPrefs.timeBarType == 'Time Elapsed') songCalc = curTime;
 
 					var secondsTotal:Int = Math.floor(songCalc / 1000);
-					if (secondsTotal < 0)
-						secondsTotal = 0;
-					else if (secondsTotal >= Math.floor(songLength / 1000))
-						secondsTotal = Math.floor(songLength / 1000);
-     				}
+					if(secondsTotal < 0) secondsTotal = 0;
+
+					if(ClientPrefs.timeBarType != 'Song Name')
+						timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+				}
+			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
