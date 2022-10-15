@@ -360,7 +360,7 @@ class FreeplayState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 				else
-				timeText.visible = false
+				timeText.visible = false;
 					vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
