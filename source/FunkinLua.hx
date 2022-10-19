@@ -2814,7 +2814,7 @@ class FunkinLua {
 		}
 	return false;
 	}
-
+    #end
 	#if hscript
 	public function initHaxeModule()
 	{
