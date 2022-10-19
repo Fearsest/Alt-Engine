@@ -36,7 +36,6 @@ class FreeplayState extends MusicBeatState
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
-	var timeText:FlxText;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
@@ -358,14 +357,6 @@ class FreeplayState extends MusicBeatState
 		{
 			if(instPlaying != curSelected)
 			{
-			    timeText = new FlxText(248, 19, 400, "", 32);
-			    timeText.screenCenter(X);
-	        	timeText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		        timeText.scrollFactor.set();
-		        timeText.alpha = 0;
-		        timeText.borderSize = 2;
-		        timeText.visible = true;
-		        timeText.text = PlayState;
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
@@ -375,15 +366,14 @@ class FreeplayState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 				else
-				timeText.visible = false;
 					vocals = new FlxSound();
 
 				FlxG.sound.list.add(vocals);
 				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
-				vocals.stop();
+				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
-				vocals.volume = 0;
+				vocals.volume = 0.7;
 				instPlaying = curSelected;
 				#end
 			}
