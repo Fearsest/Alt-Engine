@@ -46,7 +46,7 @@ typedef MenuData =
 
 class MainMenuState extends MusicBeatState
 {
-    var MainJSON = MenuData;
+    var MainJSON = new MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
     public static var altEngineVersion:String = '1.5.2';
 	public static var curSelected:Int = 0;
@@ -366,8 +366,8 @@ class MainMenuState extends MusicBeatState
 		    if(MainJSON.centerX == true){
 			spr.screenCenter(X);
 		    }
-                    //spr.screenCenter(X)
 		});
+                       // spr.screenCenter(X);
 	}
 
 	function changeItem(huh:Int = 0)
