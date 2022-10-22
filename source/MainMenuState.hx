@@ -20,13 +20,15 @@ import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+import haxe.Json;
 #if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
 #end
+import openfl.Assets;
 
 using StringTools;
-typedef MenuData = 
+typedef MainMenuData = 
 {
     storyP:Array<Int>,
     freeplayP:Array<Int>,
@@ -46,7 +48,7 @@ typedef MenuData =
 
 class MainMenuState extends MusicBeatState
 {
-    var MainJSON = new(MenuData);
+    var MainJSON=MainMenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
     public static var altEngineVersion:String = '1.5.2';
 	public static var curSelected:Int = 0;
