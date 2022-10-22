@@ -366,6 +366,7 @@ class MainMenuState extends MusicBeatState
 		    if(MainJSON.centerX == true){
 			spr.screenCenter(X);
 		    }
+                    //spr.screenCenter(X)
 		});
 	}
 
