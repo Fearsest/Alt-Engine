@@ -25,7 +25,6 @@ import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import openfl.Assets;
 
 using StringTools;
 typedef MenuData = 
@@ -48,6 +47,7 @@ typedef MenuData =
 
 class MainMenuState extends MusicBeatState
 {
+    var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
     public static var altEngineVersion:String = '1.5.2';
 	public static var curSelected:Int = 0;
@@ -69,8 +69,6 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-	
-	var MainJSON:MenuData;
 
 	override function create()
 	{
@@ -83,24 +81,6 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		
-		#if (desktop && MODS_ALLOWED)
-		var path = "mods/" + Paths.currentModDirectory + "/images/MainData.json";
-		//trace(path, FileSystem.exists(path));
-		if (!FileSystem.exists(path)){
-			path = "mods/MainData.json";
-		}
-		//trace(path, FileSystem.exists(path));
-		if (!FileSystem.exists(path)){
-			path = "assets/images/MainData.json";
-		}
-		MainJSON = json.parse(File.getContent(path));
-		//trace(path, FileSystem.exists(path));
-		#else
-		var path = Paths.getPreloadPath("/images/MainData.json");
-		MainJSON = json.parse(Assets.getText(path));
-		#end
-	
 		debugKeys = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 
 		camGame = new FlxCamera();
@@ -115,9 +95,11 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		persistentUpdate = persistentDraw = true;
+		
+		MainJSON = Json.parse(Paths.getTextFromFile('images/MainMenuData.json'));
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image(MainJSON.BackGround));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image(MainJSON.menuBG));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
