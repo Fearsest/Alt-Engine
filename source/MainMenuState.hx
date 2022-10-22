@@ -49,7 +49,7 @@ class MainMenuState extends MusicBeatState
 {
     var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
-    public static var altEngineVersion:String = '1.5.2';
+        public static var altEngineVersion:String = '1.5.2';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
