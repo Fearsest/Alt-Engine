@@ -83,4 +83,4 @@ jobs:
         uses: actions/upload-artifact@v2.2.4
         with:
           name: androidBuild
-          path: export/release/android/bin/app/build/outputs/apk/debug
+          path: out/Alt-Engine.apk
