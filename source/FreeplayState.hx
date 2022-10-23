@@ -18,7 +18,6 @@ import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
-import haxe.Json;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
@@ -32,34 +31,36 @@ typedef FreePlayData =
     ScoreTextP:Array<Int>,
     DiffTextP:Array<Int>,
     FreeplayIconP:Array<Int>,
-    FreeplayBG:String
+    FreeplayBG:String,
     centerX:Bool
 }
+
 class FreeplayState extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
 
 	var selector:FlxText;
-	private static var curSelected:<Int> = 0;
-	var curDifficulty:<Int> = -1;
+	private static var curSelected:Int = 0;
+	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
+
 
     var FreeplayJSON:FreePlayData;
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
-	var lerpScore:<Int> = 0;
+	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
-	var <Int>endedScore:<Int> = 0;
-	var <Int>endedRating:Float = 0;
+	var intendedScore:Int = 0;
+	var intendedRating:Float = 0;
 
-	private var grpSongs:FlxTypedGroup<AlphabetFreeplay>;
+	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
 
 	var bg:FlxSprite;
-	var <Int>endedColor:<Int>;
+	var intendedColor:Int;
 	var colorTween:FlxTween;
 
 	override function create()
@@ -94,7 +95,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			WeekData.setDirectoryFromWeek(leWeek);
 			for (song in leWeek.songs)
 			{
-				var colors:Array<<Int>> = song[2];
+				var colors:Array<Int> = song[2];
 				if(colors == null || colors.length < 3)
 				{
 					colors = [146, 113, 253];
@@ -111,16 +112,16 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		{
 			if(initSonglist[i] != null && initSonglist[i].length > 0) {
 				var songArray:Array<String> = initSonglist[i].split(":");
-				addSong(songArray[0], 0, songArray[1], Std.parse<Int>(songArray[2]));
+				addSong(songArray[0], 0, songArray[1], Std.parseInt(songArray[2]));
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image(FreePlayData.FreeplayBG);
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
 
-		grpSongs = new FlxTypedGroup<AlphabetFreeplay>();
+		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
 		for (i in 0...songs.length)
@@ -163,7 +164,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(FreePlayData.ScoreTextP[0],FreePlayData.ScoreTextP[1], 0, "", 32);
+        scoreText = new FlxText(FreePlayData.ScoreTextP[0],FreePlayData.ScoreTextP[1], 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
 		scoreBG = new FlxSprite(FreeplayScoreBGPos[0], FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
@@ -180,7 +181,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 
 		if(curSelected >= songs.length) curSelected = 0;
 		bg.color = songs[curSelected].color;
-		<Int>endedColor = bg.color;
+		intendedColor = bg.color;
 
 		if(lastDifficultyName == '')
 		{
@@ -191,7 +192,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		changeSelection();
 		changeDiff();
 
-		var swag:AlphabetFreeplay = new AlphabetFreeplay(1, 0, "swag");
+        var swag:AlphabetFreeplay = new AlphabetFreeplay(1, 0, "swag");
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
@@ -217,18 +218,18 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		#if PRELOAD_ALL
 			#if android
 			var leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
-			var size:<Int> = 16;
+			var size:Int = 16;
 			#else
 			var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-			var size:<Int> = 16;
+			var size:Int = 16;
 			#end
 		#else
 			#if android
 			var leText:String = "Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
-			var size:<Int> = 18;
+			var size:Int = 18;
 			#else
 			var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
-			var size:<Int> = 18;
+			var size:Int = 18;
 			#end
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
@@ -250,7 +251,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:<Int>, songCharacter:String, color:<Int>)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
 	{
 		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
 	}
@@ -260,12 +261,12 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		return (!leWeek.startUnlocked && leWeek.weekBefore.length > 0 && (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
 	}
 
-	/*public function addWeek(songs:Array<String>, weekNum:<Int>, weekColor:<Int>, ?songCharacters:Array<String>)
+	/*public function addWeek(songs:Array<String>, weekNum:Int, weekColor:Int, ?songCharacters:Array<String>)
 	{
 		if (songCharacters == null)
 			songCharacters = ['bf'];
 
-		var num:<Int> = 0;
+		var num:Int = 0;
 		for (song in songs)
 		{
 			addSong(song, weekNum, songCharacters[num]);
@@ -276,7 +277,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		}
 	}*/
 
-	var instPlaying:<Int> = -1;
+	var instPlaying:Int = -1;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
@@ -286,13 +287,13 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
-		lerpScore = Math.floor(FlxMath.lerp(lerpScore, <Int>endedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
-		lerpRating = FlxMath.lerp(lerpRating, <Int>endedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
+		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
+		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
 
-		if (Math.abs(lerpScore - <Int>endedScore) <= 10)
-			lerpScore = <Int>endedScore;
-		if (Math.abs(lerpRating - <Int>endedRating) <= 0.01)
-			lerpRating = <Int>endedRating;
+		if (Math.abs(lerpScore - intendedScore) <= 10)
+			lerpScore = intendedScore;
+		if (Math.abs(lerpRating - intendedRating) <= 0.01)
+			lerpRating = intendedRating;
 
 		var ratingSplit:Array<String> = Std.string(Highscore.floorDecimal(lerpRating * 100, 2)).split('.');
 		if(ratingSplit.length < 2) { //No decimals, add an empty space
@@ -312,7 +313,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		var space = FlxG.keys.justPressed.SPACE #if android || virtualPad.buttonX.justPressed #end;
 		var ctrl = FlxG.keys.justPressed.CONTROL #if android || virtualPad.buttonC.justPressed #end;
 
-		var shiftMult:<Int> = 1;
+		var shiftMult:Int = 1;
 		if(FlxG.keys.pressed.SHIFT #if android || virtualPad.buttonZ.pressed #end) shiftMult = 3;
 
 		if(songs.length > 1)
@@ -330,9 +331,9 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 
 			if(controls.UI_DOWN || controls.UI_UP)
 			{
-				var checkLastHold:<Int> = Math.floor((holdTime - 0.5) * 10);
+				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
 				holdTime += elapsed;
-				var checkNewHold:<Int> = Math.floor((holdTime - 0.5) * 10);
+				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
 
 				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 				{
@@ -456,7 +457,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		vocals = null;
 	}
 
-	function changeDiff(change:<Int> = 0)
+	function changeDiff(change:Int = 0)
 	{
 		curDifficulty += change;
 
@@ -468,8 +469,8 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		lastDifficultyName = CoolUtil.difficulties[curDifficulty];
 
 		#if !switch
-		<Int>endedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		<Int>endedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		#end
 
 		PlayState.storyDifficulty = curDifficulty;
@@ -477,7 +478,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		positionHighscore();
 	}
 
-	function changeSelection(change:<Int> = 0, playSound:Bool = true)
+	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
 		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
@@ -488,13 +489,13 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		if (curSelected >= songs.length)
 			curSelected = 0;
 			
-		var newColor:<Int> = songs[curSelected].color;
-		if(newColor != <Int>endedColor) {
+		var newColor:Int = songs[curSelected].color;
+		if(newColor != intendedColor) {
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
-			<Int>endedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, <Int>endedColor, {
+			intendedColor = newColor;
+			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
 					colorTween = null;
 				}
@@ -504,15 +505,15 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		// selector.y = (70 * curSelected) + 30;
 
 		#if !switch
-		<Int>endedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		<Int>endedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
+		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
+		intendedRating = Highscore.getRating(songs[curSelected].songName, curDifficulty);
 		#end
 
-		var bullShit:<Int> = 0;
+		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = 0;
+			iconArray[i].alpha = 0.6;
 		}
 
 		iconArray[curSelected].alpha = 1;
@@ -523,12 +524,12 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			bullShit++;
 
 			item.alpha = 0.6;
-			// item.setGraphicSize(Std.<Int>(item.width * 0.8));
+			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.<Int>(item.width));
+				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
 		
@@ -542,7 +543,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		if(diffStr != null && diffStr.length > 0)
 		{
 			var diffs:Array<String> = diffStr.split(',');
-			var i:<Int> = diffs.length - 1;
+			var i:Int = diffs.length - 1;
 			while (i > 0)
 			{
 				if(diffs[i] != null)
@@ -568,7 +569,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			curDifficulty = 0;
 		}
 
-		var newPos:<Int> = CoolUtil.difficulties.indexOf(lastDifficultyName);
+		var newPos:Int = CoolUtil.difficulties.indexOf(lastDifficultyName);
 		//trace('Pos of ' + lastDifficultyName + ' is ' + newPos);
 		if(newPos > -1)
 		{
@@ -591,12 +592,12 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 class SongMetadata
 {
 	public var songName:String = "";
-	public var week:<Int> = 0;
+	public var week:Int = 0;
 	public var songCharacter:String = "";
-	public var color:<Int> = -7179779;
+	public var color:Int = -7179779;
 	public var folder:String = "";
 
-	public function new(song:String, week:<Int>, songCharacter:String, color:<Int>)
+	public function new(song:String, week:Int, songCharacter:String, color:Int)
 	{
 		this.songName = song;
 		this.week = week;
