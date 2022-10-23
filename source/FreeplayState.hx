@@ -18,6 +18,7 @@ import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
+import haxe.Json;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
@@ -31,8 +32,7 @@ typedef FreePlayData =
     ScoreTextP:Array<Int>,
     DiffTextP:Array<Int>,
     FreeplayIconP:Array<Int>,
-    FreeplayBG:String,
-    centerX:Bool
+    FreeplayBG:String
 }
 
 class FreeplayState extends MusicBeatState
@@ -116,7 +116,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite().loadGraphic(Paths.image(FreePlayData.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
@@ -126,14 +126,10 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 
 		for (i in 0...songs.length)
 		{
-			var songText:AlphabetFreeplay = new AlphabetFreeplay(0, (70 * i) + 30, songs[i].songName, true, false);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
-			songText.isMenuItemCenter = false;
 			songText.targetY = i;
 			grpSongs.add(songText);
-		if(FreeplayJSON.centerX == true){
-		    songText.isMenuItem = false;
-		    songText.isMenuItemCenter= true;
 		}
 
 			if (songText.width > 980)
@@ -167,13 +163,13 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
         scoreText = new FlxText(FreePlayData.ScoreTextP[0],FreePlayData.ScoreTextP[1], 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
-		scoreBG = new FlxSprite(FreeplayScoreBGPos[0], FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
+		scoreBG = new FlxSprite(FreePlayData.FreeplayScoreBGPos[0], FreePlayData.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
 		add(scoreBG);
 
-		diffText = new FlxText(DiffTextP[0], DiffTextP[1], 0, "", 24);
+		diffText = new FlxText(FreePlayData.DiffTextP[0],FreePlayData.DiffTextP[1], 0, "", 24);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -192,7 +188,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		changeSelection();
 		changeDiff();
 
-        var swag:AlphabetFreeplay = new AlphabetFreeplay(1, 0, "swag");
+        var swag:Alphabet = new Alphabet(1, 0, "swag");
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
