@@ -25,7 +25,6 @@ import sys.FileSystem;
 using StringTools;
 typedef FreePlayData =
 {
-    centerX:Bool,
     FreeplayTextP:<Array>Int,
     FreeplayScoreBGPos:<Array>Int,
     FreeplayScoreBGScale:<Array>Float,
@@ -33,6 +32,7 @@ typedef FreePlayData =
     DiffTextP:<Array>Int,
     FreeplayIconP:<Array>Int,
     FreeplayBG:String
+    centerX:Bool
 }
 class FreeplayState extends MusicBeatState
 {
