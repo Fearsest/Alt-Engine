@@ -354,13 +354,13 @@ class MainMenuState extends MusicBeatState
 					{
 						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
+							FlxTween.tween(spr, {x: -900}, 0.6, {
+							ease: FlxEase.backIn,
+							onComplete: function(twn:FlxTween)
+							{
+								spr.kill();
+							}
+						});
 						}
 						else
 						{
