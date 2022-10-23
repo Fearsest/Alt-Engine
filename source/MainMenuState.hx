@@ -147,6 +147,13 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
 			//freeplay
 			var menuItem:FlxSprite = new FlxSprite(MainJSON.freeplayP[0],MainJSON.freeplayP[1]);
 			menuItem.scale.x = MainJSON.freeplayS[0];
@@ -161,6 +168,13 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
 			//mods
 			var menuItem:FlxSprite = new FlxSprite(MainJSON.modsP[0],MainJSON.modsP[1]);
 			menuItem.scale.x = MainJSON.modsS[0];
@@ -175,6 +189,13 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
 			//awards
 			var menuItem:FlxSprite = new FlxSprite(MainJSON.awardsP[0],MainJSON.awardsP[1]);
 			menuItem.scale.x = MainJSON.awardsS[0];
@@ -188,6 +209,13 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
 			//credits
 			var menuItem:FlxSprite = new FlxSprite(MainJSON.creditsP[0],MainJSON.creditsP[1]);
 			menuItem.scale.x = MainJSON.creditsS[0];
@@ -202,6 +230,13 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
 			//options
 			var menuItem:FlxSprite = new FlxSprite(MainJSON.optionsP[0],MainJSON.optionsP[1]);
 			menuItem.scale.x = MainJSON.optionsS[0];
