@@ -26,7 +26,7 @@ import sys.FileSystem;
 using StringTools;
 typedef FreePlayData =
 {
-    FreeplayScoreText:String,,
+    FreeplayScoreText:String,
     FreeplayScoreBGPos:Array<Int>,
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
