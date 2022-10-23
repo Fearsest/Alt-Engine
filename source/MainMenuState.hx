@@ -142,6 +142,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[0] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = 0;
+                        // menuItem.screenCenter(X)
             if(MainJSON.centerX == true) {
                 menuItem.screenCenter(X);
             }
@@ -155,6 +156,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[1] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = 1;
+                        // menuItem.screenCenter(X);
             if(MainJSON.centerX == true) {
                 menuItem.screenCenter(X);
             }
@@ -168,6 +170,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[2] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = 2;
+                        // menuItem.screenCenter(X);
             if(MainJSON.centerX == true) {
                 menuItem.screenCenter(X);
             }
@@ -194,6 +197,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[4] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = 4;
+                        // menuItem.screenCenter(X);
             if(MainJSON.centerX == true) {
                 menuItem.screenCenter(X);
             }
@@ -207,6 +211,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[5] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = 5;
+                        // menuItem.screenCenter(X);
             if(MainJSON.centerX == true) {
                 menuItem.screenCenter(X);
             }
