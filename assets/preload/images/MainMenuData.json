@@ -1,0 +1,16 @@
+{
+    "storyP":[0,0],
+    "freeplayP":[0,140],
+    "modsP":[0,280],
+    "awardsP":[0,420],
+    "creditsP":[0,560],
+    "optionsP":[0,700],
+    "storyS":[1,1],
+    "freeplayS":[1,1],
+    "modsS":[1,1],
+    "awardsS":[1,1],
+    "creditsS":[1,1],
+    "optionsS":[1,1],
+    "centerX":true,
+    "menuBG":"menuBG"
+}
