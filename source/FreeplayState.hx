@@ -31,7 +31,6 @@ typedef FreePlayData =
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
     DiffTextP:Array<Int>,
-    FreeplayIconP:Array<Int>,
     FreeplayBG:String
 }
 
@@ -44,8 +43,6 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
-
-    var FreeplayJSON:FreePlayData;
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -53,7 +50,8 @@ class FreeplayState extends MusicBeatState
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
-
+        var FreeplayJSON:FreePlayData;
+    
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -76,9 +74,8 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
-FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
-
+        FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
+        
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -116,7 +113,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image(FreePlayData.FreeplayBG));
+        bg = new FlxSprite().loadGraphic(Paths.image(FreePlayData.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
@@ -130,7 +127,6 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
-		}
 
 			if (songText.width > 980)
 			{
@@ -147,8 +143,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.x = FreePlayData.FreeplayIconP[0];
-            icon.y = FreePlayData.FreeplayIconP[1];
+			icon.sprTracker = songText;
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -188,7 +183,7 @@ FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 		changeSelection();
 		changeDiff();
 
-        var swag:Alphabet = new Alphabet(1, 0, "swag");
+		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
