@@ -35,7 +35,8 @@ typedef FreePlayData =
     FreeplayBG:String,
     ScoreBGA:Float,
     DifficultText:Array<String>,
-    DiffSize:Int
+    DiffSize:Int,
+    IconPos:Array<Int>
 }
 
 class FreeplayState extends MusicBeatState
@@ -147,7 +148,8 @@ class FreeplayState extends MusicBeatState
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+			icon.x = FreeplayJSON.IconPos[0];
+                        icon.y = FreeplayJSON.IconPos[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
