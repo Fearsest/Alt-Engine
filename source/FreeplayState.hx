@@ -22,7 +22,6 @@ import haxe.Json;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
-import openfl.Assets;
 
 using StringTools;
 typedef FreePlayData =
@@ -32,6 +31,7 @@ typedef FreePlayData =
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
     DiffTextP:Array<Int>,
+    FreeplayIconP:Array<Int>,
     FreeplayBG:String
 }
 
@@ -44,6 +44,8 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
+
+    var FreeplayJSON:FreePlayData;
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -51,8 +53,7 @@ class FreeplayState extends MusicBeatState
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
-        var FreeplayJSON:FreePlayData;
-    
+
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -75,8 +76,9 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-        FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
-        
+
+FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
+
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -114,7 +116,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
-        bg = new FlxSprite().loadGraphic(Paths.image(FreePlayData.FreeplayBG));
+		bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
@@ -128,6 +130,7 @@ class FreeplayState extends MusicBeatState
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
+		}
 
 			if (songText.width > 980)
 			{
@@ -144,7 +147,8 @@ class FreeplayState extends MusicBeatState
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+			icon.x = FreeplayJSON.FreeplayIconP[0];
+            icon.y = FreeplayJSON.FreeplayIconP[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -156,16 +160,16 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-        scoreText = new FlxText(FreePlayData.ScoreTextP[0],FreePlayData.ScoreTextP[1], 0, "", 32);
+        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0, "", 32);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
-		scoreBG = new FlxSprite(FreePlayData.FreeplayScoreBGPos[0], FreePlayData.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
+		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
 		add(scoreBG);
 
-		diffText = new FlxText(FreePlayData.DiffTextP[0],FreePlayData.DiffTextP[1], 0, "", 24);
+		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, "", 24);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -184,7 +188,7 @@ class FreeplayState extends MusicBeatState
 		changeSelection();
 		changeDiff();
 
-		var swag:Alphabet = new Alphabet(1, 0, "swag");
+        var swag:Alphabet = new Alphabet(1, 0, "swag");
 
 		// JUST DOIN THIS SHIT FOR TESTING!!!
 		/* 
@@ -570,14 +574,14 @@ class FreeplayState extends MusicBeatState
 	}
 
 	private function positionHighscore() {
-		scoreText.x = FreePlayData.ScoreTextP[0];
-		scoreText.y = FreePlayData.ScoreTextP[1];
+		scoreText.x = FreeplayJSON.ScoreTextP[0];
+		scoreText.y = FreeplayJSON.ScoreTextP[1];
 
-		scoreBG.scale.x = FreePlayData.FreeplayScoreBGScale[0];
-		scoreBG.x = FreePlayData.FreeplayScoreBGPos[0];
-		scoreBG.y = FreePlayData.FreeplayScoreBGPos[1];
-		diffText.y = FreePlayData.DiffTextP[1];
-		diffText.x = FreePlayData.DiffTextP[0];
+		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
+		scoreBG.x = FreeplayJSON.FreeplayScoreBGPos[0];
+		scoreBG.y = FreeplayJSON.FreeplayScoreBGPos[1];
+		diffText.y = FreeplayJSON.DiffTextP[1];
+		diffText.x = FreeplayJSON.DiffTextP[0];
 	}
 }
 
