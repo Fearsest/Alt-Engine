@@ -511,7 +511,7 @@ class FreeplayState extends MusicBeatState
 			iconArray[i].alpha = 0;
 		}
 
-		iconArray[curSelected].alpha = FreeplayJSON.IconP[2];
+		iconArray[curSelected].alpha = 1;
 
 		for (item in grpSongs.members)
 		{
