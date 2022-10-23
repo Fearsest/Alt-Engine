@@ -22,7 +22,6 @@ import haxe.Json;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
-import openfl.Aseets;
 
 using StringTools;
 typedef FreePlayData =
