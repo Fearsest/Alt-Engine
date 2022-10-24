@@ -26,9 +26,8 @@ import sys.FileSystem;
 using StringTools;
 typedef FreePlayData =
 {
-    FreeplayScoreText:String,
+    FreeplayScoreText:Array<String>,
     FreeplayScoreBGPos:Array<Int>,
-    FreeplayScoreBGImage:String,
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
     FreeplayScoreTextSize:Int,
@@ -49,7 +48,7 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
-	var scoreBG:FlxSprite = new FlxSprite();
+	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
 	var lerpScore:Int = 0;
@@ -132,6 +131,7 @@ class FreeplayState extends MusicBeatState
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
+			songText.borderSize = 0;
 			grpSongs.add(songText);
 
 			if (songText.width > 980)
@@ -151,6 +151,7 @@ class FreeplayState extends MusicBeatState
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
             icon.y = FreeplayJSON.IconPos[1];
+            icon.borderSize = 1;
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -162,15 +163,10 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
+        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,"", FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
-        #if(FreeplayJSON.FreeplayScoreBGImage == null){
-		scoreBG.loadGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage));
-		#else
-		scoreBG.makeGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage));
-        }
-        #end
 
+		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
@@ -307,7 +303,7 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
+		scoreText.text = FreeplayJSON.FreeplayScoreText[0] + lerpScore + FreeplayJSON.FreeplayScoreText[1] + ratingSplit.join('.') + FreeplayJSON.FreeplayScoreText[2];
 		positionHighscore();
 
 		var upP = controls.UI_UP_P;
