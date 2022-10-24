@@ -41,6 +41,8 @@ typedef StoryData =
     weekThingS:Array<Float>,
     BlackBGP:Array<Int>,
     BlackBGS:Array<Int>,
+    BlackBGAngle:Int,
+    BlackBGAlpha:Float,
     DiffP:Array<Int>,
     DiffS:Array<Float>,
     DiffAlpha:Float,
@@ -85,7 +87,7 @@ class StoryMenuState extends MusicBeatState
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
 		
-		FreeplayJSON = Json.parse(Paths.getTextFromFile('images/StoryJson.json'));
+		StoryJson = Json.parse(Paths.getTextFromFile('images/StoryJson.json'));
         
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
@@ -137,11 +139,12 @@ class StoryMenuState extends MusicBeatState
 			{
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
-				var weekThing:MenuItem = new MenuItem(weekThingP[0],weekThingP[1], WeekData.weeksList[i]);
+				var weekThing:MenuItem = new MenuItem(StoryJSON.weekThingP[0],StoryJSON.weekThingP[1], WeekData.weeksList[i]);
 				weekThing.y += ((weekThing.height + 20) * num);
 				weekThing.targetY = num;
 				grpWeekText.add(weekThing);
-                if(StoryJSON.centerX == true){
+                if(StoryJSON.centerX == true)
+                {
                     weekThing.screenCenter(X);
                 }
 				// weekThing.screenCenter(X);
@@ -193,7 +196,7 @@ class StoryMenuState extends MusicBeatState
 		tracksSprite.antialiasing = ClientPrefs.globalAntialiasing;
 		// add(tracksSprite);
 
-		txtTracklist = new FlxText(StoryJSON.TrackListP[0],TrackListP[1],StoryJSON.TrackListBorder, "Week Tracks\n", StoryJSON.TrackListSize);
+		txtTracklist = new FlxText(StoryJSON.TrackListP[0],StoryJSON.TrackListP[1],StoryJSON.TrackListBorder, "Week Tracks\n", StoryJSON.TrackListSize);
 		txtTracklist.alignment = StoryJSON.TrackListAlignment;
 		txtTracklist.font = rankText.font;
 		txtTracklist.color = 0xFFe55777;
@@ -424,7 +427,6 @@ class StoryMenuState extends MusicBeatState
 		CoolUtil.difficulties = CoolUtil.defaultDifficulties.copy();
 		var diffStr:String = WeekData.getCurrentWeek().difficulties;
 		if(diffStr != null) diffStr = diffStr.trim(); //Fuck you HTML5
-		difficultySelectors.visible = unlocked;
 
 		if(diffStr != null && diffStr.length > 0)
 		{
