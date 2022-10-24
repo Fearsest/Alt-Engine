@@ -128,9 +128,6 @@ class FreeplayState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
-		grpSongs = new FlxTypedGroup<FlxText>();
-		add(grpSongs);
-
 		for (i in 0...songs.length)
 		{
 			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0], FreeplayJSON.SongTextP[1] ,2, songs[i].songName,FreeplayJSON.SongTextSize);
@@ -139,12 +136,12 @@ class FreeplayState extends MusicBeatState
 			songText.x = FreeplayJSON.SongTextP[0];
 			songText.y = FreeplayJSON.SongTextP[1];
 			songText.targetY = i;
-			grpSongs.add(songText);
+			add(songText);
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
-                        icon.y = FreeplayJSON.IconPos[1];
+            icon.y = FreeplayJSON.IconPos[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
