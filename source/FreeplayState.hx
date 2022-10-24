@@ -26,7 +26,7 @@ import sys.FileSystem;
 using StringTools;
 typedef FreePlayData =
 {
-    FreeplayScoreText:Array<String>,
+    FreeplayScoreText:String,
     FreeplayScoreBGPos:Array<Int>,
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
@@ -47,43 +47,7 @@ class FreeplayState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
-            {
-               for (i in 0...songs.length)
-		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
-			songText.isMenuItem = true;
-			songText.targetY = i;
-			grpSongs.add(songText);
 
-			if (songText.width > 980)
-			{
-				var textScale:Float = 980 / songText.width;
-				songText.scale.x = textScale;
-				for (letter in songText.lettersArray)
-				{
-					letter.x *= textScale;
-					letter.offset.x *= textScale;
-				}
-				//songText.updateHitbox();
-				//trace(songs[i].songName + ' new scale: ' + textScale);
-			}
-             }
-
-			Paths.currentModDirectory = songs[i].folder;
-
-                        var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.x = FreeplayJSON.IconPos[0];
-                        icon.y = FreeplayJSON.IconPos[1];
-
-			// using a FlxGroup is too much fuss!
-			iconArray.push(icon);
-			add(icon);
-
-			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
-			// songText.screenCenter(X);
-		}
-        
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -91,8 +55,8 @@ class FreeplayState extends MusicBeatState
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
-    var FreeplayJSON:FreePlayData;
-    
+	var FreeplayJSON:FreePlayData;
+
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -116,7 +80,7 @@ class FreeplayState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
         FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
-        
+
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -154,7 +118,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
-        bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
+		bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
@@ -162,10 +126,42 @@ class FreeplayState extends MusicBeatState
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
-		
+		for (i in 0...songs.length)
+		{
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			songText.isMenuItem = true;
+			songText.targetY = i;
+			grpSongs.add(songText);
+
+			if (songText.width > 980)
+			{
+				var textScale:Float = 980 / songText.width;
+				songText.scale.x = textScale;
+				for (letter in songText.lettersArray)
+				{
+					letter.x *= textScale;
+					letter.offset.x *= textScale;
+				}
+				//songText.updateHitbox();
+				//trace(songs[i].songName + ' new scale: ' + textScale);
+			}
+
+			Paths.currentModDirectory = songs[i].folder;
+			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+			icon.x = FreeplayJSON.IconPos[0];
+            icon.y = FreeplayJSON.IconPos[1];
+
+			// using a FlxGroup is too much fuss!
+			iconArray.push(icon);
+			add(icon);
+
+			// songText.x += 40;
+			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
+			// songText.screenCenter(X);
+		}
 		WeekData.setDirectoryFromWeek();
 
-        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,"", FreeplayJSON.FreeplayScoreTextSize);
+		scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,"", FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
 		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
@@ -305,7 +301,7 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = FreeplayJSON.FreeplayScoreText[0] + lerpScore + FreeplayJSON.FreeplayScoreText[1] + ratingSplit.join('.') + FreeplayJSON.FreeplayScoreText[2];
+		scoreText.text = FreeplayJSON.FreeplayScoreText + lerpScore;
 		positionHighscore();
 
 		var upP = controls.UI_UP_P;
@@ -514,7 +510,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = 0;
+			iconArray[i].alpha = 0.6;
 		}
 
 		iconArray[curSelected].alpha = 1;
@@ -578,7 +574,7 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
-	private function positionHighscore() {
+		private function positionHighscore() {
 		scoreText.x = FreeplayJSON.ScoreTextP[0];
 		scoreText.y = FreeplayJSON.ScoreTextP[1];
 
