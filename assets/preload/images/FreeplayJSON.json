@@ -1,0 +1,13 @@
+{
+    "FreeplayScoreText":"BEST SCORE: ",
+    "FreeplayScoreBGPos":[1100,0],
+    "FreeplayScoreBGScale":[600,710],
+    "ScoreTextP":[496,0],
+    "FreeplayScoreTextSize":30,
+    "DiffTextP":[910,30],
+    "FreeplayBG":"menuDesat",
+    "ScoreBGA":0.6,
+    "DifficultText":["Difficulty: "," mode"],
+    "DiffSize":26,
+    "IconPos":[900,300]
+}
