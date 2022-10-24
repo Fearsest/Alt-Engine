@@ -133,7 +133,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...songs.length)
 		{
-			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0],FreeplayJSON.SongTextP[1],FreeplayJSON.SongTextString + songs[i].songName, true, false);
+			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0], FreeplayJSON.SongTextP[1], FlxG.width, FreeplayJSON.SongTextString + songs[i].songName, FreeplayJSON.SongTextSize, false);
 			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont),FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
 			songText.x = FreeplayJSON.SongTextP[0];
 			songText.y = FreeplayJSON.SongTextP[1];
@@ -501,7 +501,6 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		var bullShit:Int = 0;
-        var targetY:Int = bullShit - curSelected;
 
 		for (i in 0...iconArray.length)
 		{
@@ -512,12 +511,13 @@ class FreeplayState extends MusicBeatState
 
 		for (item in grpSongs.members)
 		{
+			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (targetY == 0)
+			if (item.targetY == 0)
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
