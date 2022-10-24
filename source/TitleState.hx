@@ -286,7 +286,9 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
-		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
+		logoBl = new FlxSprite(titleJSON.titleX, titleJSON.titley);
+                FlxTween.tween(logoBl, {y: -100}, 0.8, {ease: FlxEase.quadInOut});
+
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 
 		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
@@ -298,6 +300,8 @@ class TitleState extends MusicBeatState
 
 		swagShader = new ColorSwap();
 		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
+                FlxTween.tween(gfDance, {x:512, 0.8, {ease: FlxEase.quadInOut});
+
 
 		var easterEgg:String = FlxG.save.data.psychDevsEasterEgg;
 		if(easterEgg == null) easterEgg = ''; //html5 fix
@@ -339,6 +343,8 @@ class TitleState extends MusicBeatState
 		logoBl.shader = swagShader.shader;
 
 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
+                FlxTween.tween(titleText, {y: 576}, 0.8, {ease: FlxEase.quadInOut});
+
 		#if MODS_ALLOWED
 		var path = SUtil.getPath() + "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
 		//trace(path, FileSystem.exists(path));
