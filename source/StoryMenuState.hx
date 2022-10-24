@@ -31,6 +31,7 @@ typedef StoryData =
     ScoreTextSize:Int,
     WeekTitleSize:Int,
     WeekTitleP:Array<Int>,
+    WeekTitleAlpha:Float,
     TrackListP:Array<Int>,
     BGSpriteP:Array<Int>,
     BGSpriteS:Array<Float>,
@@ -87,7 +88,7 @@ class StoryMenuState extends MusicBeatState
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
 		
-		StoryJson = Json.parse(Paths.getTextFromFile('images/StoryJson.json'));
+		StoryJSON = Json.parse(Paths.getTextFromFile('images/StoryJson.json'));
         
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
