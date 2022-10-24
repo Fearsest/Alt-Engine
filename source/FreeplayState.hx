@@ -28,6 +28,7 @@ typedef FreePlayData =
 {
     FreeplayScoreText:String,
     FreeplayScoreBGPos:Array<Int>,
+    FreeplayScoreBGImage:String,
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
     FreeplayScoreTextSize:Int,
@@ -149,7 +150,7 @@ class FreeplayState extends MusicBeatState
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
-                        icon.y = FreeplayJSON.IconPos[1];
+            icon.y = FreeplayJSON.IconPos[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -163,8 +164,12 @@ class FreeplayState extends MusicBeatState
 
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
-
+        #if(FreeplayJSON.FreeplayScoreBGImage == null){
 		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
+		#else
+		scoreBG = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage),FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]);
+        }
+        
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
