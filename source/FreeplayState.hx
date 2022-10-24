@@ -137,7 +137,6 @@ class FreeplayState extends MusicBeatState
 			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont),FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
 			songText.x = FreeplayJSON.SongTextP[0];
 			songText.y = FreeplayJSON.SongTextP[1];
-			songText.targetY = i;
 			grpSongs.add(songText);
 
 			Paths.currentModDirectory = songs[i].folder;
@@ -511,13 +510,13 @@ class FreeplayState extends MusicBeatState
 
 		for (item in grpSongs.members)
 		{
-			item.targetY = bullShit - curSelected;
+			item.Y = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.targetY == 0)
+			if (item.Y == 0)
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
