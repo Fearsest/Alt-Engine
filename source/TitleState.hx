@@ -286,7 +286,7 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
-		logoBl = new FlxSprite(titleJSON.titleX, titleJSON.titley);
+		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
                 FlxTween.tween(logoBl, {y: -100}, 0.8, {ease: FlxEase.quadInOut});
 
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
