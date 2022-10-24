@@ -171,7 +171,7 @@ class FreeplayState extends MusicBeatState
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
 		add(scoreBG);
 
-		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, FreeplayJSON.DifficultText, FreeplayJSON.DiffSize);
+		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, "", FreeplayJSON.DiffSize);
 		diffText.font = scoreText.font;
 		add(diffText);
 
