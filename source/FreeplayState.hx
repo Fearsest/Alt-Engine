@@ -62,7 +62,7 @@ class FreeplayState extends MusicBeatState
 	var intendedRating:Float = 0;
 	var FreeplayJSON:FreePlayData;
 
-	private var grpSongs:FlxTypedGroup<Alphabet>;
+	private var grpSongs:FlxTypedGroup<FlxText>;
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
@@ -84,7 +84,7 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-        FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
+		FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
 
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
@@ -128,14 +128,17 @@ class FreeplayState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
+		grpSongs = new FlxTypedGroup<FlxText>();
+		add(grpSongs);
+
 		for (i in 0...songs.length)
 		{
-			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0], FreeplayJSON.SongTextP[1] ,2, songs[i].songName,FreeplayJSON.SongTextSize);
-			songText.text = FreeplayJSON.songTextString + songs[i].songName;
-			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont),FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
+			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0],FreeplayJSON.SongTextP[1],FreeplayJSON.SongTextString + songs[i].songName, true, false);
+			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont)FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
 			songText.x = FreeplayJSON.SongTextP[0];
 			songText.y = FreeplayJSON.SongTextP[1];
-			add(songText);
+			songText.targetY = i;
+			grpSongs.add(songText);
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
@@ -505,6 +508,21 @@ class FreeplayState extends MusicBeatState
 		}
 
 		iconArray[curSelected].alpha = 1;
+
+		for (item in grpSongs.members)
+		{
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			item.alpha = 0;
+			// item.setGraphicSize(Std.int(item.width * 0.8));
+
+			if (item.targetY == 0)
+			{
+				item.alpha = 1;
+				// item.setGraphicSize(Std.int(item.width));
+			}
+		}
 		
 		Paths.currentModDirectory = songs[curSelected].folder;
 		PlayState.storyWeek = songs[curSelected].week;
@@ -550,7 +568,7 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
-		private function positionHighscore() {
+	private function positionHighscore() {
 		scoreText.x = FreeplayJSON.ScoreTextP[0];
 		scoreText.y = FreeplayJSON.ScoreTextP[1];
 
