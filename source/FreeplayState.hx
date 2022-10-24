@@ -134,7 +134,7 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...songs.length)
 		{
 			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0],FreeplayJSON.SongTextP[1],FreeplayJSON.SongTextString + songs[i].songName, true, false);
-			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont)FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
+			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont),FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
 			songText.x = FreeplayJSON.SongTextP[0];
 			songText.y = FreeplayJSON.SongTextP[1];
 			songText.targetY = i;
