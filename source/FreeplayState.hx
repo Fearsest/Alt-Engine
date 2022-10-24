@@ -48,6 +48,7 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
+        var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -131,7 +132,6 @@ class FreeplayState extends MusicBeatState
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
-			songText.borderSize = 0;
 			grpSongs.add(songText);
 
 			if (songText.width > 980)
@@ -148,10 +148,8 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Paths.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
-            icon.y = FreeplayJSON.IconPos[1];
-            icon.borderSize = 1;
+                        icon.y = FreeplayJSON.IconPos[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
