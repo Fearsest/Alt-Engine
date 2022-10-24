@@ -62,7 +62,7 @@ class FreeplayState extends MusicBeatState
 	var intendedRating:Float = 0;
 	var FreeplayJSON:FreePlayData;
 
-	private var grpSongs:FlxTypedGroup<FlxText>;
+	private var grpSongs:Array<FlxText> = [];
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
@@ -508,19 +508,15 @@ class FreeplayState extends MusicBeatState
 
 		iconArray[curSelected].alpha = 1;
 
-		for (item in grpSongs.members)
+		for (i in 0...grpSongs.length)
 		{
-			item.Y = bullShit - curSelected;
-			bullShit++;
-
-			item.alpha = 0;
+			
+			grpSongs[i].alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.Y == 0)
-			{
-				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
+		}
+			grpSongs[curSelected].alpha = 1;
+			// item.setGraphicSize(Std.int(item.width));
 		}
 		
 		Paths.currentModDirectory = songs[curSelected].folder;
