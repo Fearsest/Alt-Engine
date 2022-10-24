@@ -169,6 +169,7 @@ class FreeplayState extends MusicBeatState
 		#else
 		scoreBG = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage),FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]);
         }
+        #end
         
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
