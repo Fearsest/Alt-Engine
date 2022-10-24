@@ -27,6 +27,11 @@ using StringTools;
 typedef FreePlayData =
 {
     FreeplayScoreText:String,
+    SongTextString:String,
+    SongTextSize:Int,
+    SongTextFont:String,
+    SongTextAlignment:String,
+    SongTextP:Array<Int>,
     FreeplayScoreBGPos:Array<Int>,
     FreeplayScoreBGScale:Array<Float>,
     ScoreTextP:Array<Int>,
@@ -123,33 +128,23 @@ class FreeplayState extends MusicBeatState
 		add(bg);
 		bg.screenCenter();
 
-		grpSongs = new FlxTypedGroup<Alphabet>();
+		grpSongs = new FlxTypedGroup<FlxText>();
 		add(grpSongs);
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
-			songText.isMenuItem = true;
+			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0], FreeplayJSON.SongTextP[1] ,2, songs[i].songName,FreeplayJSON.SongTextSize);
+			songText.text = FreeplayJSON.songTextString + songs[i].songName;
+			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont)FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
+			songText.x = FreeplayJSON.SongTextP[0];
+			songText.y = FreeplayJSON.SongTextP[1];
 			songText.targetY = i;
 			grpSongs.add(songText);
-
-			if (songText.width > 980)
-			{
-				var textScale:Float = 980 / songText.width;
-				songText.scale.x = textScale;
-				for (letter in songText.lettersArray)
-				{
-					letter.x *= textScale;
-					letter.offset.x *= textScale;
-				}
-				//songText.updateHitbox();
-				//trace(songs[i].songName + ' new scale: ' + textScale);
-			}
 
 			Paths.currentModDirectory = songs[i].folder;
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
-            icon.y = FreeplayJSON.IconPos[1];
+                        icon.y = FreeplayJSON.IconPos[1];
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -510,7 +505,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = 0.6;
+			iconArray[i].alpha = 0;
 		}
 
 		iconArray[curSelected].alpha = 1;
@@ -520,7 +515,7 @@ class FreeplayState extends MusicBeatState
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
+			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
