@@ -47,6 +47,7 @@ class FreeplayState extends MusicBeatState
 	private static var curSelected:Int = 0;
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
+            {
                for (i in 0...songs.length)
 		{
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
@@ -66,6 +67,7 @@ class FreeplayState extends MusicBeatState
 				//songText.updateHitbox();
 				//trace(songs[i].songName + ' new scale: ' + textScale);
 			}
+             }
 
 			Paths.currentModDirectory = songs[i].folder;
 
