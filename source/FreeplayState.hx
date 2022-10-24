@@ -49,7 +49,7 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
-	var scoreBG:FlxSprite;
+	var scoreBG:FlxSprite = new FlxSprite();
 	var scoreText:FlxText;
 	var diffText:FlxText;
 	var lerpScore:Int = 0;
@@ -165,12 +165,12 @@ class FreeplayState extends MusicBeatState
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
         #if(FreeplayJSON.FreeplayScoreBGImage == null){
-		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
+		scoreBG.loadGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage));
 		#else
-		scoreBG = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage),FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]);
+		scoreBG.makeGraphic(Paths.image(FreeplayJSON.FreeplayScoreBGImage));
         }
         #end
-        
+
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
