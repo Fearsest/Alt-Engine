@@ -501,6 +501,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		var bullShit:Int = 0;
+        var targetY:Int = bullShit - curSelected;
 
 		for (i in 0...iconArray.length)
 		{
@@ -511,13 +512,12 @@ class FreeplayState extends MusicBeatState
 
 		for (item in grpSongs.members)
 		{
-			item.Y= bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.Y == 0)
+			if (targetY == 0)
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
