@@ -300,7 +300,7 @@ class TitleState extends MusicBeatState
 
 		swagShader = new ColorSwap();
 		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
-                FlxTween.tween(gfDance, {x:512, 0.8, {ease: FlxEase.quadInOut});
+                FlxTween.tween(gfDance, {x:512}, 0.8, {ease: FlxEase.quadInOut});
 
 
 		var easterEgg:String = FlxG.save.data.psychDevsEasterEgg;
