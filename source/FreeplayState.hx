@@ -511,13 +511,13 @@ class FreeplayState extends MusicBeatState
 
 		for (item in grpSongs.members)
 		{
-			item.targetY = bullShit - curSelected;
+			item.Y= bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.targetY == 0)
+			if (item.Y == 0)
 			{
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
