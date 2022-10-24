@@ -27,10 +27,6 @@ using StringTools;
 typedef FreePlayData =
 {
     FreeplayScoreText:String,
-    SongTextString:String,
-    SongTextSize:Int,
-    SongTextFont:String,
-    SongTextAlignment:String,
     SongTextP:Array<Int>,
     FreeplayScoreBGPos:Array<Int>,
     FreeplayScoreBGScale:Array<Float>,
@@ -60,9 +56,9 @@ class FreeplayState extends MusicBeatState
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
-	var FreeplayJSON:FreePlayData;
-
-	private var grpSongs:Array<FlxText> = [];
+    var FreeplayJSON:FreePlayData;
+    
+	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
@@ -84,8 +80,8 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
-
+        FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
+        
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -123,24 +119,36 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
+        bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
 
-		grpSongs = new FlxTypedGroup<FlxText>();
+		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
 		for (i in 0...songs.length)
 		{
-			var songText:FlxText = new FlxText(FreeplayJSON.SongTextP[0], FreeplayJSON.SongTextP[1], FlxG.width, FreeplayJSON.SongTextString + songs[i].songName, FreeplayJSON.SongTextSize, false);
-			songText.setFormat(Paths.font(FreeplayJSON.SongTextFont),FreeplayJSON.SongTextSize,FlxColor.WHITE,FreeplayJSON.SongTextAlignment);
-			songText.x = FreeplayJSON.SongTextP[0];
-			songText.y = FreeplayJSON.SongTextP[1];
+			var songText:Alphabet = new Alphabet(FreeplayJSON.SongTextP[0],FreeplayJSON.SongTextP[1] , songs[i].songName, true, false);
+			songText.isMenuItem = true;
+			songText.targetY = i;
 			grpSongs.add(songText);
 
+			if (songText.width > 980)
+			{
+				var textScale:Float = 980 / songText.width;
+				songText.scale.x = textScale;
+				for (letter in songText.lettersArray)
+				{
+					letter.x *= textScale;
+					letter.offset.x *= textScale;
+				}
+				//songText.updateHitbox();
+				//trace(songs[i].songName + ' new scale: ' + textScale);
+			}
+
 			Paths.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
+            var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
             icon.y = FreeplayJSON.IconPos[1];
 
@@ -154,7 +162,7 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,"", FreeplayJSON.FreeplayScoreTextSize);
+        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
 		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 66, 0xFF000000);
@@ -163,7 +171,7 @@ class FreeplayState extends MusicBeatState
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
 		add(scoreBG);
 
-		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, "", FreeplayJSON.DiffSize);
+		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, Fr, 24);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -508,15 +516,19 @@ class FreeplayState extends MusicBeatState
 
 		iconArray[curSelected].alpha = 1;
 
-		for (i in 0...grpSongs.length)
+		for (item in grpSongs.members)
 		{
-			
-			grpSongs[i].alpha = 0;
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			item.alpha = 0;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-		}
-			grpSongs[curSelected].alpha = 1;
-			// item.setGraphicSize(Std.int(item.width));
+			if (item.targetY == 0)
+			{
+				item.alpha = 1;
+				// item.setGraphicSize(Std.int(item.width));
+			}
 		}
 		
 		Paths.currentModDirectory = songs[curSelected].folder;
