@@ -49,6 +49,7 @@ typedef StoryData =
     DiffAlpha:Float,
     TrackListBorder:Int,
     TrackListAlignment:String,
+    TrackListText:String,
     TrackListSize:Int,
     centerX:Bool
 }
@@ -111,6 +112,8 @@ class StoryMenuState extends MusicBeatState
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 		var bgYellow:FlxSprite = new FlxSprite(StoryJSON.YBackgroundP[0], StoryJSON.YBackgroundP[1]).makeGraphic(StoryJSON.YBackgroundS[0], StoryJSON.YBackgroundS[1], 0xFFF9CF51);
 		bgSprite = new FlxSprite(StoryJSON.BGSpriteP[0], StoryJSON.BGSpriteP[1]);
+		bgSprite.scale.x = StoryJSON.BGSpriteS[0];
+		bgSprite.scale.y = StoryJSON.BGSpriteS[1];
 		bgSprite.antialiasing = ClientPrefs.globalAntialiasing;
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
@@ -141,6 +144,8 @@ class StoryMenuState extends MusicBeatState
 				loadedWeeks.push(weekFile);
 				WeekData.setDirectoryFromWeek(weekFile);
 				var weekThing:MenuItem = new MenuItem(StoryJSON.weekThingP[0],StoryJSON.weekThingP[1], WeekData.weeksList[i]);
+				weekThing.scale.x = StoryJSON.weekThingS[0];
+				weekThing.scale.y = StoryJSON.weekThingS[1];
 				weekThing.y += ((weekThing.height + 20) * num);
 				weekThing.targetY = num;
 				grpWeekText.add(weekThing);
@@ -488,7 +493,7 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text = '';
 		for (i in 0...stringThing.length)
 		{
-			txtTracklist.text += stringThing[i] + '\n';
+			txtTracklist.text += StoryJSON.TrackListText + stringThing[i] + '\n';
 		}
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
