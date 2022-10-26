@@ -166,7 +166,7 @@ class FreeplayState extends MusicBeatState
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
-		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 1, FreeplayJSON.ScoreBGColor);
+		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 1,"0x" + FreeplayJSON.ScoreBGColor);
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
