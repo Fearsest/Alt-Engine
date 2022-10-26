@@ -94,8 +94,9 @@ class StoryMenuState extends MusicBeatState
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
 
-        BG = new FlxSprite().loadGraphic(Paths.image(StoryJSON.BackgroundSprite));
-        BG.screenCenter(X);
+                BG = new FlxSprite().loadGraphic(Paths.image(StoryJSON.BackgroundSprite));
+                BG.screenCenter(X);
+                add(BG);
 		scoreText = new FlxText(StoryJSON.ScoreTextP[0],StoryJSON.ScoreTextP[1], 0, "", StoryJSON.ScoreTextSize);
 		scoreText.setFormat("VCR OSD Mono", StoryJSON.ScoreTextSize);
 		
@@ -110,7 +111,6 @@ class StoryMenuState extends MusicBeatState
 		rankText.screenCenter(X);
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-		var bgYellow:FlxSprite = new FlxSprite(StoryJSON.YBackgroundP[0], StoryJSON.YBackgroundP[1]).makeGraphic(StoryJSON.YBackgroundS[0], StoryJSON.YBackgroundS[1], 0xFFF9CF51);
 		bgSprite = new FlxSprite(StoryJSON.BGSpriteP[0], StoryJSON.BGSpriteP[1]);
 		bgSprite.scale.x = StoryJSON.BGSpriteS[0];
 		bgSprite.scale.y = StoryJSON.BGSpriteS[1];
@@ -123,6 +123,7 @@ class StoryMenuState extends MusicBeatState
 		blackBarThingie.angle = StoryJSON.BlackBGAngle;
 		blackBarThingie.alpha = StoryJSON.BlackBGAlpha;
 		add(blackBarThingie);
+                var bgYellow:FlxSprite = new FlxSprite(StoryJSON.YBackgroundP[0], StoryJSON.YBackgroundP[1]).makeGraphic(StoryJSON.YBackgroundS[0], StoryJSON.YBackgroundS[1], 0xFFF9CF51);
 
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 
@@ -133,7 +134,7 @@ class StoryMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
+                add(bgYellow);
 		var num:Int = 0;
 		for (i in 0...WeekData.weeksList.length)
 		{
@@ -192,9 +193,8 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.scale.x = StoryJSON.DiffS[0];
 		sprDifficulty.scale.y = StoryJSON.DiffS[1];
 		sprDifficulty.antialiasing = ClientPrefs.globalAntialiasing;
-	    add(sprDifficulty);
+	        add(sprDifficulty);
 
-		add(bgYellow);
 		add(bgSprite);
 		add(grpWeekCharacters);
 
