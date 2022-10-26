@@ -490,10 +490,10 @@ class StoryMenuState extends MusicBeatState
 			stringThing.push(leWeek.songs[i][0]);
 		}
 
-		txtTracklist.text = '';
+		txtTracklist.text = StoryJSON.TrackListText + '\n';
 		for (i in 0...stringThing.length)
 		{
-			txtTracklist.text += StoryJSON.TrackListText + stringThing[i] + '\n';
+			txtTracklist.text += stringThing[i] + '\n';
 		}
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
