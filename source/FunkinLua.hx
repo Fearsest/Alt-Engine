@@ -10,6 +10,7 @@ import llua.Convert;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.addons.effects.FlxTrail;
+import flixel.effects.FlxFlicker;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -889,7 +890,7 @@ class FunkinLua {
 			return retVal;
 		});
 
-		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
+		Lua_helper.add_callback(lua, "import ", function(libName:String, ?libPackage:String = '') {
 			#if hscript
 			initHaxeModule();
 
@@ -3400,6 +3401,7 @@ class HScript
 	{
 		interp = new Interp();
 		interp.variables.set('FlxG', FlxG);
+                interp.variables.set('FlxFlicker',FlxFlicker);
 		interp.variables.set('FlxSprite', FlxSprite);
 		interp.variables.set('FlxCamera', FlxCamera);
 		interp.variables.set('FlxTimer', FlxTimer);
