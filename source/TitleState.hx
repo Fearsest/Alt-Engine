@@ -666,8 +666,6 @@ class TitleState extends MusicBeatState
 					//FlxG.sound.music.stop();
 					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-                                        addMoreText('Thanks to ShadowMario and',15);
-                                        addMoreText('M.A.Jigsaw for the engine',15);
 				case 2:
 					#if PSYCH_WATERMARKS
 					createCoolText(['Alt Engine by'], 15);
@@ -680,6 +678,8 @@ class TitleState extends MusicBeatState
 					addMoreText('Fearester', 15);
 					addMoreText('StefanBETA2008', 15);
 					addMoreText('Rom4chek', 15);
+                                        addMoreText('Thanks to ShadowMario and',15);
+                                        addMoreText('M.A.Jigsaw for the engine',15);
 					#else
 					addMoreText('present');
 					#end
