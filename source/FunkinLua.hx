@@ -890,7 +890,7 @@ class FunkinLua {
 			return retVal;
 		});
 
-		Lua_helper.add_callback(lua, "import ", function(libName:String, ?libPackage:String = '') {
+		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			#if hscript
 			initHaxeModule();
 
