@@ -84,7 +84,7 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-        FreeplayJSON = Json.parse(Paths.getTextFromFile('images/FreeplayJson.json'));
+        FreeplayJSON = Json.parse(Paths.getTextFromFile('UI Jsons/FreeplayJson.json'));
         
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
