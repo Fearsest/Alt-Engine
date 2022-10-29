@@ -89,7 +89,7 @@ class StoryMenuState extends MusicBeatState
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
 		
-		StoryJSON = Json.parse(Paths.getTextFromFile('images/StoryJson.json'));
+		StoryJSON = Json.parse(Paths.getTextFromFile('UI Jsons/StoryJson.json'));
         
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
