@@ -1,0 +1,17 @@
+{
+    "FreeplayScoreText":"BEST SCORE: ",
+    "SongTextP":[0,0],
+    "SongAlpha":1,
+    "SongSelectedAlpha":0.6,
+    "FreeplayScoreBGPos":[1070,60],
+    "FreeplayScoreBGScale":[400,100],
+    "ScoreTextP":[870,20],
+    "FreeplayScoreTextSize":32,
+    "DiffTextP":[870,50],
+    "FreeplayBG":"menuDesat",
+    "ScoreBGA":0.7,
+    "DifficultText":["[","]\n Character: "],
+    "DiffSize":24,
+    "IconPos":[900,300],
+    "ScoreBGColor":"FFFFFF"
+}
