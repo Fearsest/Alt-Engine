@@ -17,38 +17,38 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   AndroidBuild:
-    name: AndroidBuild / Андроид Сборка
+    name: AndroidBuild
     runs-on: ubuntu-latest
     steps:
-      - name: Исследование/Checkout
+      - name: Checkout
         uses: actions/checkout@v2.3.1
 
-      - name: Сохранить состояние/ Save state
+      - name: Save state
         run: echo "::save-state name={name}::{value}"
 
-      - name: Установка output / output install
+      - name: output install
         run: echo "::set-output name={name}::{value}"
 
-      - name: Настройка Android NDK / Setup Android NDK
+      - name: Setup Android NDK
         uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
           ndk-version: r21e
 
-      - name: Настройка Java JDK / Setup Java JDK
+      - name: Setup Java JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      - name:  Настройка Android SDK / setup Android SDK
+      - name: setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Настройка haxe/ haxe setup
+      - name: haxe setup
         uses: krdlab/setup-haxe@v1.1.5
         with:
           haxe-version: 4.2.5
 
-      - name: Установка haxelib/ install haxelib
+      - name: install haxelib
         run: |
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null
@@ -65,10 +65,10 @@ jobs:
           haxelib git extension-androidtools https://github.com/MAJigsaw77/extension-androidtools
           haxelib list
 
-      - name: Тег Версии/ Version Tag
+      - name: Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
-      - name: Настройка lime / Lime Setup
+      - name: Lime Setup
         run: |
           haxelib run lime setup -alias -y
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -80,11 +80,11 @@ jobs:
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
-      - name: Компиляция/Compile
+      - name: Compile
         run: haxelib run lime build android --app-version="4.0.0-${{ github.run_id}}"
 
-      - name: Опубликовать сборку/Publish Artefact
+      - name: Publish Artefact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: Андроид сборка/Android build
+          name: Android build
           path: export/release/android/bin/app/build/outputs/apk/debug
