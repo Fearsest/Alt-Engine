@@ -145,7 +145,7 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
-        private var scriptArray:Array<ScriptCore> = [];
+    private var scriptArray:Array<ScriptCore> = [];
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -863,15 +863,6 @@ class PlayState extends MusicBeatState
 			foldersToCheck.insert(0, Paths.mods(mod + '/scripts/'));
 		#end
 
-                #if hscript
-                var filePush:Array<String> = [];
-		var CheckFolder:Array<String> = [SUtil.getPath() + Paths.getPreloadPath('scripts/')];
-
-                CheckFolder.insert(0,Paths.mods('mods/scripts'));
-			if (script.endsWith('.hx'))
-				scriptArray.push(new ScriptCore(script));
-                #end
-
 		for (folder in foldersToCheck)
 		{
 			if(FileSystem.exists(folder))
@@ -888,9 +879,16 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-                if(FileSystem.exists(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')))
-                scriptArray.push(new ScriptCore(Paths.hx('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')));
-
+        if(FileSystem.exists(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')))
+        scriptArray.push(new ScriptCore(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')));
+        #if (hscript)
+        var filePush:Array<String> = [];
+		var CheckFolder:Array<String> = [SUtil.getPath() + Paths.getPreloadPath('scripts/')];
+        #elseif (MODS_ALLOWED && hscript)
+        CheckFolder.insert(0,Paths.mods(mod + '/scripts/'));
+		if (filePush.endsWith('.hx'))
+		scriptArray.push(new ScriptCore(CheckFolder));
+        #end
 
 		// STAGE SCRIPTS
 		#if (MODS_ALLOWED && LUA_ALLOWED)
@@ -2805,7 +2803,7 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
                 #if hscript
-                callOnScripts('onFocus', []);
+                callScripts('onFocus', []);
                 #end
 
 		#if desktop
@@ -2828,7 +2826,7 @@ class PlayState extends MusicBeatState
 	override public function onFocusLost():Void
 	{
                 #if hscript
-                callOnScripts('onFocusLost', []);
+                callScripts('onFocusLost', []);
                 #end
 
 		#if desktop
@@ -3827,7 +3825,7 @@ class PlayState extends MusicBeatState
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
                         #if hscript 
-                        callOnScripts('camearaFollow', ['dad']);
+                        callScripts('camearaFollow', ['dad']);
                         #end
 
 			tweenCamIn();
@@ -3838,7 +3836,7 @@ class PlayState extends MusicBeatState
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
                         #if hscript
-                        callOnScripts('camearaFollow', ['boyfriend']);
+                        callScripts('camearaFollow', ['boyfriend']);
                         #end
 
 			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
@@ -4610,7 +4608,7 @@ class PlayState extends MusicBeatState
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
                 #if hscript
-                callOnScripts('opponentNoteHit', [daNote]);
+                callScripts('opponentNoteHit', [daNote]);
                 #end
 
 		if (!note.isSustainNote)
@@ -4652,7 +4650,7 @@ class PlayState extends MusicBeatState
 				note.wasGoodHit = true;
 
                                 #if hscript
-                                callOnScripts('goodNoteHit', [daNote]);
+                                callScripts('goodNoteHit', [daNote]);
                                 #end
 
 				if (!note.isSustainNote)
@@ -5303,4 +5301,23 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
+}
+private function callScripts(funcName:String, args:Array<Dynamic>):Dynamic
+	{
+		var value:Dynamic = ScriptCore.Function_Continue;
+
+		for (i in 0...scriptArray.length)
+		{
+			final call:Dynamic = scriptArray[i].executeFunc(funcName, args);
+			final bool:Bool = call == ScriptCore.Function_Continue;
+			if (!bool && call != null)
+				value = call;
+		}
+
+		return value;
+	}
+
+	private function setScripts(name:String, val:Dynamic)
+		for (i in 0...scriptArray.length)
+			scriptArray[i].setVariable(name, val);
 }
