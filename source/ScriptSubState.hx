@@ -32,12 +32,6 @@ class ScriptSubState extends MusicBeatSubstate
 		daScript.executeFunc('new', args);
 	}
 
-	public override function onCursorEvent(code:String, target:IFlxUIWidget)
-	{
-		daScript.executeFunc("onCursorEvent", [code, target]);
-		super.onCursorEvent(code, target);
-	}
-
 	#if !mobile
 	public override function onDropFile(path:String)
 	{
@@ -62,12 +56,6 @@ class ScriptSubState extends MusicBeatSubstate
 	{
 		daScript.executeFunc("onResize", [width, height]);
 		super.onResize(width, height);
-	}
-
-	public override function onShowTooltip(t:FlxUITooltip)
-	{
-		daScript.executeFunc("onShowTooltip", [t]);
-		super.onShowTooltip(t);
 	}
 
 	public override function draw()
