@@ -5317,7 +5317,7 @@ private function callScripts(funcName:String, args:Array<Dynamic>):Dynamic
 		return value;
 	}
 
-	private function setScripts(name:String, val:Dynamic)
+	private function setScripts(name:String, val:Dynamic){
 		for (i in 0...scriptArray.length)
 			scriptArray[i].setVariable(name, val);
 }
