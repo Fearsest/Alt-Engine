@@ -84,7 +84,7 @@ class FunkinLua {
 	public var closed:Bool = false;
 
 	#if hscript
-	public static var hscript:HScript = null;
+	public static var haxeInterp:Interp = null;
 	#end
 	
 	public function new(script:String) {
@@ -115,7 +115,7 @@ class FunkinLua {
 			return;
 		}
 		scriptName = script;
-		initHaxeModule();
+		initHaxeInterp();
 		
 		trace('lua file loaded succesfully:' + script);
 
@@ -878,7 +878,7 @@ class FunkinLua {
             var retVal:Dynamic = null;
             
             #if hscript
-			initHaxeModule();
+			initHaxeInterp();
 			
 			try {
 				retVal = hscript.execute(codeToRun);
@@ -897,7 +897,7 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			#if hscript
-			initHaxeModule();
+			initHaxeInterp();
 
 			try {
 				var str:String = '';
@@ -2822,7 +2822,7 @@ class FunkinLua {
 	}
     #end
 	#if hscript
-	public function initHaxeModule()
+	public function initHaxeInterp()
 	{
 		if(hscript == null)
 		{
