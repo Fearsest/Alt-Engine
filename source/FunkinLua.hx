@@ -1,5 +1,3 @@
-package;
-
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -7,14 +5,9 @@ import llua.State;
 import llua.Convert;
 #end
 
-#if android
-import MusicBeatState;
-#end
-
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.addons.effects.FlxTrail;
-import flixel.effects.FlxFlicker;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -54,7 +47,6 @@ import DialogueBoxPsych;
 #if hscript
 import hscript.Parser;
 import hscript.Interp;
-import hscript.Expr;
 #end
 
 #if desktop
@@ -62,6 +54,7 @@ import Discord;
 #end
 
 #if android
+import MusicBeatState;
 import android.Hardware;
 #end
 
@@ -110,13 +103,11 @@ class FunkinLua {
 				lua = null;
 				return;
 			}
-		} catch(e:Dynamic) {
+		}catch(e:Dynamic){
 			trace(e);
 			return;
 		}
 		scriptName = script;
-		initHaxeInterp();
-		
 		trace('lua file loaded succesfully:' + script);
 
 		// Lua shit
@@ -135,7 +126,6 @@ class FunkinLua {
 		set('stepCrochet', Conductor.stepCrochet);
 		set('songLength', FlxG.sound.music.length);
 		set('songName', PlayState.SONG.song);
-                set('songStage',PlayState.SONG.stage);
 		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
 		set('startedCountdown', false);
 
@@ -235,31 +225,6 @@ class FunkinLua {
 		#else
 		set('buildTarget', 'unknown');
 		#end
-		
-		// custom substate
-		Lua_helper.add_callback(lua, "openCustomSubstate", function(name:String, pauseGame:Bool = false) {
-			if(pauseGame)
-			{
-				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = true;
-				PlayState.instance.paused = true;
-				if(FlxG.sound.music != null) {
-					FlxG.sound.music.pause();
-					PlayState.instance.vocals.pause();
-				}
-			}
-			PlayState.instance.openSubState(new CustomSubstate(name));
-		});
-
-		Lua_helper.add_callback(lua, "closeCustomSubstate", function() {
-			if(CustomSubstate.instance != null)
-			{
-				PlayState.instance.closeSubState();
-				CustomSubstate.instance = null;
-				return true;
-			}
-			return false;
-		});
 
 		// shader shit
 		Lua_helper.add_callback(lua, "initLuaShader", function(name:String, glslVersion:Int = 120) {
@@ -875,24 +840,23 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "runHaxeCode", function(codeToRun:String) {
-            var retVal:Dynamic = null;
-            
-            #if hscript
+			#if hscript
 			initHaxeInterp();
-			
+
 			try {
-				retVal = hscript.execute(codeToRun);
+				var myFunction:Dynamic = haxeInterp.expr(new Parser().parseString(codeToRun));
+				myFunction();
 			}
 			catch (e:Dynamic) {
-				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				switch(e)
+				{
+					case 'Null Function Pointer', 'SReturn':
+						//nothing
+					default:
+						luaTrace(scriptName.replace(SUtil.getPath(), "") + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				}
 			}
-			#else
-			luaTrace("HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
-			
-			if(retVal != null && !isOfTypes(retVal, [Bool, Int, Float, String, Array])) retVal = null;
-			if(retVal == null) Lua.pushnil(lua);
-			return retVal;
 		});
 
 		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
@@ -904,7 +868,7 @@ class FunkinLua {
 				if(libPackage.length > 0)
 					str = libPackage + '.';
 
-				hscript.variables.set(libName, Type.resolveClass(str + libName));
+				haxeInterp.variables.set(libName, Type.resolveClass(str + libName));
 			}
 			catch (e:Dynamic) {
 				luaTrace(scriptName.replace(SUtil.getPath(), "") + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
@@ -2812,25 +2776,45 @@ class FunkinLua {
 	}
 
 	#if hscript
-	public function isOfTypes(value:Any, types:Array<Dynamic>)
-	{
-		for (type in types)
-		{
-			if(Std.isOfType(value, type)) return true;
-		}
-	return false;
-	}
-    #end
-	#if hscript
 	public function initHaxeInterp()
 	{
-		if(hscript == null)
+		if(haxeInterp == null)
 		{
-			trace('initializing haxe interp for: $scriptName');
-			hscript = new HScript(); //TO DO: Fix issue with 2 scripts not being able to use the same variable names
+			haxeInterp = new Interp();
+			haxeInterp.variables.set('FlxG', FlxG);
+			haxeInterp.variables.set('FlxSprite', FlxSprite);
+			haxeInterp.variables.set('FlxCamera', FlxCamera);
+			haxeInterp.variables.set('FlxTween', FlxTween);
+			haxeInterp.variables.set('FlxEase', FlxEase);
+			haxeInterp.variables.set('PlayState', PlayState);
+			haxeInterp.variables.set('game', PlayState.instance);
+			haxeInterp.variables.set('Paths', Paths);
+			haxeInterp.variables.set('Conductor', Conductor);
+			haxeInterp.variables.set('ClientPrefs', ClientPrefs);
+			haxeInterp.variables.set('Character', Character);
+			haxeInterp.variables.set('Alphabet', Alphabet);
+			#if !flash
+			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
+			haxeInterp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
+			#end
+			#if android
+			haxeInterp.variables.set('MusicBeatState',MusicBeatState);
+			haxeInterp.variables.set('StringTools', StringTools);
+			haxeInterp.variables.set('SUtil', SUtil);// this is more like for android because filesaving needs it
+
+			haxeInterp.variables.set('setVar', function(name:String, value:Dynamic)
+			{
+				PlayState.instance.variables.set(name, value);
+			});
+			haxeInterp.variables.set('getVar', function(name:String)
+			{
+				if(!PlayState.instance.variables.exists(name)) return null;
+				return PlayState.instance.variables.get(name);
+			});
 		}
 	}
-    #end
+	#end
+
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic):Any
 	{
 		var shit:Array<String> = variable.split('[');
@@ -3354,99 +3338,3 @@ class DebugLuaText extends FlxText
 		if(disableTime < 1) alpha = disableTime;
 	}
 }
-class CustomSubstate extends MusicBeatSubstate
-{
-	public static var name:String = 'unnamed';
-	public static var instance:CustomSubstate;
-
-	override function create()
-	{
-		instance = this;
-
-		PlayState.instance.callOnLuas('onCustomSubstateCreate', [name]);
-		super.create();
-		PlayState.instance.callOnLuas('onCustomSubstateCreatePost', [name]);
-	}
-
-	public function new(name:String)
-	{
-		CustomSubstate.name = name;
-		super();
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-	}
-
-	override function update(elapsed:Float)
-	{
-		PlayState.instance.callOnLuas('onCustomSubstateUpdate', [name, elapsed]);
-		super.update(elapsed);
-		PlayState.instance.callOnLuas('onCustomSubstateUpdatePost', [name, elapsed]);
-	}
-
-	override function destroy()
-	{
-		PlayState.instance.callOnLuas('onCustomSubstateDestroy', [name]);
-		super.destroy();
-	}
-}
-
-#if hscript
-class HScript
-{
-	public static var parser:Parser = new Parser();
-	public var interp:Interp;
-
-	public var variables(get, never):Map<String, Dynamic>;
-
-	public function get_variables()
-	{
-		return interp.variables;
-	}
-
-	public function new()
-	{
-		interp = new Interp();
-		interp.variables.set('FlxG', FlxG);
-                interp.variables.set('FlxFlicker',FlxFlicker);
-		interp.variables.set('FlxSprite', FlxSprite);
-		interp.variables.set('FlxCamera', FlxCamera);
-		interp.variables.set('FlxTimer', FlxTimer);
-		interp.variables.set('FlxTween', FlxTween);
-		interp.variables.set('FlxEase', FlxEase);
-		interp.variables.set('PlayState', PlayState);
-		interp.variables.set('game', PlayState.instance);
-		interp.variables.set('Paths', Paths);
-		interp.variables.set('Conductor', Conductor);
-		interp.variables.set('ClientPrefs', ClientPrefs);
-		interp.variables.set('Character', Character);
-		interp.variables.set('Alphabet', Alphabet);
-		interp.variables.set('CustomSubstate', CustomSubstate);
-                #if android
-                interp.variables.set('MusicBeatState',MusicBeatState);
-                #end
-		#if !flash
-		interp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
-		interp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
-		#end
-		interp.variables.set('StringTools', StringTools);
-		interp.variables.set('SUtil', SUtil);
-		interp.variables.set('setVar', function(name:String, value:Dynamic)
-		{
-			PlayState.instance.variables.set(name, value);
-		});
-		interp.variables.set('getVar', function(name:String)
-		{
-			var result:Dynamic = null;
-			if(PlayState.instance.variables.exists(name)) result = PlayState.instance.variables.get(name);
-			return result;
-		});
-	}
-
-	public function execute(codeToRun:String):Dynamic
-	{
-		@:privateAccess
-		HScript.parser.line = 1;
-		HScript.parser.allowTypes = true;
-		return interp.execute(HScript.parser.parseString(codeToRun));
-	}
-}
-#end
