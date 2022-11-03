@@ -867,7 +867,7 @@ class PlayState extends MusicBeatState
                 var filePush:Array<String> = [];
 		var CheckFolder:Array<String> = [SUtil.getPath() + Paths.getPreloadPath('scripts/')];
 
-                CheckFolder.insert(0,Paths.mods('mods/scripts'))
+                CheckFolder.insert(0,Paths.mods('mods/scripts'));
 			if (script.endsWith('.hx'))
 				scriptArray.push(new ScriptCore(script));
                 #end
