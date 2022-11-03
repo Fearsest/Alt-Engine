@@ -2799,9 +2799,9 @@ class FunkinLua {
 			#end
 			#if android
 			haxeInterp.variables.set('MusicBeatState',MusicBeatState);
+			#end
 			haxeInterp.variables.set('StringTools', StringTools);
 			haxeInterp.variables.set('SUtil', SUtil);// this is more like for android because filesaving needs it
-
 			haxeInterp.variables.set('setVar', function(name:String, value:Dynamic)
 			{
 				PlayState.instance.variables.set(name, value);
