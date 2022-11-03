@@ -145,8 +145,6 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
-    private var scriptArray:Array<ScriptCore> = [];
-
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
 	public var eventNotes:Array<EventNote> = [];
@@ -879,9 +877,10 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-        if(FileSystem.exists(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')))
-        scriptArray.push(new ScriptCore(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')));
+        if(FileSystem.exists(Paths.modFolders('data/' + Paths.formatToSongPath(SONG.song.toLowerCase()) + '/script')))
+        scriptArray.push(new ScriptCore(Paths.modFolders('data/' + Paths.formatToSongPath(SONG.song.toLowerCase()) + '/script')));
         #if (hscript)
+        var scriptArray:Array<ScriptCore> = [];
         var filePush:Array<String> = [];
 		var CheckFolder:Array<String> = [SUtil.getPath() + Paths.getPreloadPath('scripts/')];
         #elseif (MODS_ALLOWED && hscript)
@@ -4649,9 +4648,9 @@ class PlayState extends MusicBeatState
 
 				note.wasGoodHit = true;
 
-                                #if hscript
-                                callScripts('goodNoteHit', [daNote]);
-                                #end
+                #if hscript
+                callScripts('goodNoteHit', [daNote]);
+                #end
 
 				if (!note.isSustainNote)
 				{
