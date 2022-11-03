@@ -8,7 +8,6 @@ import llua.Convert;
 #end
 
 #if android
-import android.AndrordControls;
 import MusicBeatState;
 #end
 
@@ -136,6 +135,7 @@ class FunkinLua {
 		set('stepCrochet', Conductor.stepCrochet);
 		set('songLength', FlxG.sound.music.length);
 		set('songName', PlayState.SONG.song);
+                set('songStage',PlayState.SONG.stage);
 		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
 		set('startedCountdown', false);
 
@@ -3421,7 +3421,6 @@ class HScript
 		interp.variables.set('Alphabet', Alphabet);
 		interp.variables.set('CustomSubstate', CustomSubstate);
                 #if android
-                interp.variables.set('AndroidControls',AndroidControls);
                 interp.variables.set('MusicBeatState',MusicBeatState);
                 #end
 		#if !flash
