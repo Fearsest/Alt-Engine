@@ -3415,12 +3415,16 @@ class HScript
 		interp.variables.set('Character', Character);
 		interp.variables.set('Alphabet', Alphabet);
 		interp.variables.set('CustomSubstate', CustomSubstate);
+                #if android
+                interp.variables.set('AndroidControls',AndroidControls);
+                interp.variables.set('MusicBeatState',MusicBeatState);
+                #end
 		#if !flash
 		interp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
 		interp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
 		#end
 		interp.variables.set('StringTools', StringTools);
-
+		interp.variables.set('SUtil', SUtil);
 		interp.variables.set('setVar', function(name:String, value:Dynamic)
 		{
 			PlayState.instance.variables.set(name, value);
