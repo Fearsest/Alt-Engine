@@ -2871,6 +2871,7 @@ class PlayState extends MusicBeatState
 		callOnLuas('onUpdate', [elapsed]);
                 #if hscript
                 callOnLuas('update', [elapsed]);
+                #end
 
 		switch (curStage)
 		{
