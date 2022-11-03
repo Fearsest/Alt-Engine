@@ -137,7 +137,7 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
-
+    public static var scriptArray:Array<ScriptCore> = [];
 	public var spawnTime:Float = 2000;
 
 	public var vocals:FlxSound;
