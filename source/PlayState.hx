@@ -1,5 +1,6 @@
 package;
 
+import core.ScriptCore;
 import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
@@ -144,6 +145,7 @@ class PlayState extends MusicBeatState
 	public var dad:Character = null;
 	public var gf:Character = null;
 	public var boyfriend:Boyfriend = null;
+        private var scriptArray:Array<ScriptCore> = [];
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -861,6 +863,15 @@ class PlayState extends MusicBeatState
 			foldersToCheck.insert(0, Paths.mods(mod + '/scripts/'));
 		#end
 
+                #if hscript
+                var filePush:Array<String> = [];
+		var CheckFolder:Array<String> = [SUtil.getPath() + Paths.getPreloadPath('scripts/')];
+
+                CheckFolder.insert(0,Paths.mods('mods/scripts'))
+			if (script.endsWith('.hx'))
+				scriptArray.push(new ScriptCore(script));
+                #end
+
 		for (folder in foldersToCheck)
 		{
 			if(FileSystem.exists(folder))
@@ -876,6 +887,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
+
+                if(FileSystem.exists(Paths.modFolders('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')))
+                scriptArray.push(new ScriptCore(Paths.hx('data/' + Paths.formatName(SONG.song.toLowerCase()) + '/script')));
 
 
 		// STAGE SCRIPTS
@@ -2063,7 +2077,7 @@ class PlayState extends MusicBeatState
 
 		inCutscene = false;
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
-		if(ret != FunkinLua.Function_Stop) {
+		if(ret != FunkinLua.Function_Stop || ScriptCore.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
 
 			#if android
@@ -2790,6 +2804,10 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
+                #if hscript
+                callOnScripts('onFocus', []);
+                #end
+
 		#if desktop
 		if (health > 0 && !paused)
 		{
@@ -2809,6 +2827,10 @@ class PlayState extends MusicBeatState
 
 	override public function onFocusLost():Void
 	{
+                #if hscript
+                callOnScripts('onFocusLost', []);
+                #end
+
 		#if desktop
 		if (health > 0 && !paused)
 		{
@@ -2847,6 +2869,8 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
+                #if hscript
+                callOnLuas('update', [elapsed]);
 
 		switch (curStage)
 		{
@@ -3801,6 +3825,10 @@ class PlayState extends MusicBeatState
 			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
+                        #if hscript 
+                        callOnScripts('camearaFollow', ['dad']);
+                        #end
+
 			tweenCamIn();
 		}
 		else
@@ -3808,6 +3836,9 @@ class PlayState extends MusicBeatState
 			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
+                        #if hscript
+                        callOnScripts('camearaFollow', ['boyfriend']);
+                        #end
 
 			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
 			{
@@ -3906,7 +3937,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		var ret:Dynamic = callOnLuas('onEndSong', [], false);
-		if(ret != FunkinLua.Function_Stop && !transitioning) {
+		if(ret != FunkinLua.Function_Stop && !transitioning || ScriptCore.Function_Stop && !transitioning) {
 			if (SONG.validScore)
 			{
 				#if !switch
@@ -4577,6 +4608,9 @@ class PlayState extends MusicBeatState
 		note.hitByOpponent = true;
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
+                #if hscript
+                callOnScripts('opponentNoteHit', [daNote]);
+                #end
 
 		if (!note.isSustainNote)
 		{
@@ -4615,6 +4649,11 @@ class PlayState extends MusicBeatState
 				}
 
 				note.wasGoodHit = true;
+
+                                #if hscript
+                                callOnScripts('goodNoteHit', [daNote]);
+                                #end
+
 				if (!note.isSustainNote)
 				{
 					note.kill();
