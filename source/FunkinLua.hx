@@ -7,6 +7,11 @@ import llua.State;
 import llua.Convert;
 #end
 
+#if android
+import android.AndrordControls;
+import MusicBeatState;
+#end
+
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.addons.effects.FlxTrail;
