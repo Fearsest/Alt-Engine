@@ -1,6 +1,6 @@
 package;
 
-import core.ScriptCore;
+import ScriptCore;
 import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
