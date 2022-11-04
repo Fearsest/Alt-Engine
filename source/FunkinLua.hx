@@ -226,6 +226,31 @@ class FunkinLua {
 		set('buildTarget', 'unknown');
 		#end
 
+                // substates
+                Lua_helper.add_callback(lua, "openCustomSubstate", function(name:String, pauseGame:Bool = false) {
+			if(pauseGame)
+			{
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.pause();
+					PlayState.instance.vocals.pause();
+				}
+			}
+			PlayState.instance.openSubState(new CustomSubstate(name));
+		});
+
+		Lua_helper.add_callback(lua, "closeCustomSubstate", function() {
+			if(CustomSubstate.instance != null)
+			{
+				PlayState.instance.closeSubState();
+				CustomSubstate.instance = null;
+				return true;
+			}
+			return false;
+		});
+
 		// shader shit
 		Lua_helper.add_callback(lua, "initLuaShader", function(name:String, glslVersion:Int = 120) {
 			if(!ClientPrefs.shaders) return false;
@@ -2793,6 +2818,7 @@ class FunkinLua {
 			haxeInterp.variables.set('ClientPrefs', ClientPrefs);
 			haxeInterp.variables.set('Character', Character);
 			haxeInterp.variables.set('Alphabet', Alphabet);
+                        interp.variables.set('CustomSubstate', CustomSubstate);
 			#if !flash
 			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
 			haxeInterp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
