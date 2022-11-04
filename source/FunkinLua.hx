@@ -1,3 +1,6 @@
+package;
+
+import openfl.display.BitmapData;
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -2818,7 +2821,7 @@ class FunkinLua {
 			haxeInterp.variables.set('ClientPrefs', ClientPrefs);
 			haxeInterp.variables.set('Character', Character);
 			haxeInterp.variables.set('Alphabet', Alphabet);
-                        interp.variables.set('CustomSubstate', CustomSubstate);
+                        haxeInterp.variables.set('CustomSubstate', CustomSubstate);
 			#if !flash
 			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
 			haxeInterp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
