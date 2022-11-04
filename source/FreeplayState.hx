@@ -40,7 +40,8 @@ typedef FreePlayData =
     DifficultText:Array<String>,
     DiffSize:Int,
     IconPos:Array<Int>,
-    ScoreBGColor:String
+    ScoreBGColor:String,
+    iconAlpha:Array<Float>
 }
 
 class FreeplayState extends MusicBeatState
@@ -173,6 +174,7 @@ class FreeplayState extends MusicBeatState
 		scoreBG.alpha = FreeplayJSON.ScoreBGA;
 		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
 		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
+		scoreBG.color = FreeplayJSON.ScoreBGColor;
 		add(scoreBG);
 
 		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, "", FreeplayJSON.DiffSize);
@@ -515,22 +517,22 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = 0;
+			iconArray[i].alpha = FreeplayJSON.iconAlpha[0];
 		}
 
-		iconArray[curSelected].alpha = 1;
+		iconArray[curSelected].alpha = FreeplayJSON.iconAlpha[1];
 
 		for (item in grpSongs.members)
 		{
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = FreeplayJSON.SongSelectedAlpha;
+			item.alpha = FreeplayJSON.SongAlpha;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
-				item.alpha = FreeplayJSON.SongAlpha;
+				item.alpha = FreeplayJSON.SongSelectedAlpha;
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
