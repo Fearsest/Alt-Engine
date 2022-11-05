@@ -1193,7 +1193,7 @@ class PlayState extends MusicBeatState
 			var hxToLoad:String = Paths.modFolders('custom_events/' + event + '.hx');
 			if(FileSystem.exists(hxToLoad))
 			{
-				scriptArray.push(new scriptArray(hxToLoad));
+				scriptArray.push(new ScriptCore(hxToLoad));
 			}
 			else
 			{
@@ -1687,6 +1687,33 @@ class PlayState extends MusicBeatState
 			luaArray.push(new FunkinLua(luaFile));
 		}
 		#end
+		#if hscript
+		var doPush:Bool = false;
+		var hxFile:String = 'characters/' + name + '.hx';
+		#if MODS_ALLOWED
+		if(FileSystem.exists(Paths.modFolders(hxFile))) {
+			hxFile = Paths.modFolders(hxFile);
+			doPush = true;
+		} else {
+			hxFile = SUtil.getPath() + Paths.getPreloadPath(hxFile);
+			if(FileSystem.exists(hxFile)) {
+				doPush = true;
+			}
+		}
+		#else
+		hxFile = Paths.getPreloadPath(hxFile);
+		if(Assets.exists(hxFile)) {
+			doPush = true;
+		}
+		#end
+		if(doPush)
+		{
+			for (script in scriptArray)
+			{
+				if(script.scriptName == hxFile) return;
+			}
+			scriptArray.push(new ScriptCore(hxFile));
+		}
 	}
 
 	public function getLuaObject(tag:String, text:Bool=true):FlxSprite {
@@ -2193,6 +2220,10 @@ class PlayState extends MusicBeatState
 	{
 		if(startedCountdown) {
 			callOnLuas('onStartCountdown', []);
+	    #if hscript
+	    callScripts('startCountdown', []);
+	    #end
+	    
 			return;
 		}
 
@@ -2358,6 +2389,37 @@ class PlayState extends MusicBeatState
 				swagCounter += 1;
 				// generateSong('fresh');
 			}, 5);
+		}
+		#if hscript
+		var ret:Dynamic = callScripts('startCountdown', []);
+		if (ret != ScriptCore.Function_Stop)
+		{
+			#if mobile
+			mobileControls.visible = true;
+			#end
+
+			generateStaticArrows(0);
+			generateStaticArrows(1);
+
+			for (i in 0...playerStrums.length)
+			{
+				defaultPlayerStrumX.push(playerStrums.members[i].x);
+				defaultPlayerStrumY.push(playerStrums.members[i].y);
+			}
+
+			for (i in 0...opponentStrums.length)
+			{
+				defaultOpponentStrumX.push(opponentStrums.members[i].x);
+				defaultOpponentStrumY.push(opponentStrums.members[i].y);
+				if (PreferencesData.centeredNotes)
+					opponentStrums.members[i].visible = false;
+			}
+
+			startedCountdown = true;
+			Conductor.songPosition = 0;
+			Conductor.songPosition -= Conductor.crochet * 5;
+
+			doIntro(Conductor.crochet / 1000);
 		}
 	}
 
