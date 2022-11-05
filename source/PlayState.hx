@@ -1322,7 +1322,7 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		#if hscript
 		var hxFile:String = 'songs/' + SONG.song.toLowerCase() + '.hx';
-		if (FileSystem.exists(Paths.modFolders(hxFile)))
+		if (FileSystem.exists(Paths.modFolders(hxFile)));
                 {
 		scriptArray.push(new ScriptCore(hxFile)));
                 }
