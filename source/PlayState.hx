@@ -1,5 +1,6 @@
 package;
 
+import ScriptCore;
 import flixel.graphics.FlxGraphic;
 #if desktop
 import Discord.DiscordClient;
@@ -1174,7 +1175,7 @@ class PlayState extends MusicBeatState
 			else
 			{
 				luaToLoad = SUtil.getPath() + Paths.getPreloadPath('custom_notetypes/' + notetype + '.hx');
-				if(FileSystem.exists(luaToLoad))
+				if(FileSystem.exists(hxToLoad))
 				{
 					scriptArray.push(new ScriptCore(hxToLoad));
 				}
@@ -1321,7 +1322,8 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		#if hscript
 		var hxFile:String = 'songs/' + SONG.song.toLowerCase() + '.hx';
-		if (FileSystem.exists(Paths.modFolders(hxFile))) {
+		if (FileSystem.exists(Paths.modFolders(hxFile)))
+                {
 		scriptArray.push(new ScriptCore(hxFile)));
                 }
 		#end
