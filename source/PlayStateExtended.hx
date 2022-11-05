@@ -1,6 +1,6 @@
-package states;
+package;
 
-import core.ScriptCore;
+import ScriptCore;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -19,9 +19,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import openfl.utils.Assets;
 import parse.Song;
-import parse.Stage;
-import substates.GameOverSubState;
-import substates.PauseSubState;
+import parse.StageData;
 
 using StringTools;
 
