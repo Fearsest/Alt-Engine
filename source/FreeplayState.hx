@@ -40,7 +40,8 @@ typedef FreePlayData =
     DifficultText:Array<String>,
     DiffSize:Int,
     IconPos:Array<Int>,
-    iconAlpha:Array<Float>
+    iconAlpha:Array<Float>,
+    IconSprTracker:Bool
 }
 
 class FreeplayState extends MusicBeatState
@@ -152,9 +153,13 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Paths.currentModDirectory = songs[i].folder;
-                        icon = new HealthIcon(songs[i].songCharacter);
+            icon = new HealthIcon(songs[i].songCharacter);
 			icon.x = FreeplayJSON.IconPos[0];
-                        icon.y = FreeplayJSON.IconPos[1];
+            icon.y = FreeplayJSON.IconPos[1];
+            if(FreeplayJSON.IconSprTracker = true)
+            {
+                icon.sprTracker = songText;
+            }
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
