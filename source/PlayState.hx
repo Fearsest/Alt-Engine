@@ -1168,7 +1168,7 @@ class PlayState extends MusicBeatState
 		{
 			#if MODS_ALLOWED
 			var hxToLoad:String = Paths.modFolders('custom_notetypes/' + notetype + '.lua');
-			if(FileSystem.exists(luaToLoad))
+			if(FileSystem.exists(hxToLoad))
 			{
 				scriptArray.push(new ScriptCore(hxToLoad));
 			}
@@ -1199,7 +1199,7 @@ class PlayState extends MusicBeatState
 			else
 			{
 				hxToLoad = SUtil.getPath() + Paths.getPreloadPath('custom_events/' + event + '.hx');
-				if(FileSystem.exists(luaToLoad))
+				if(FileSystem.exists(hxToLoad))
 				{
 					scriptArray.push(new ScriptCore(hxToLoad));
 				}
@@ -1322,7 +1322,7 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		#if hscript
 		var hxFile:String = 'songs/' + SONG.song.toLowerCase() + '.hx';
-		if (FileSystem.exists(Paths.modFolders(hxFile)));
+		if (FileSystem.exists(hxFile))
                 {
 		scriptArray.push(new ScriptCore(hxFile)));
                 }
