@@ -45,15 +45,14 @@ typedef MenuData =
     menuBG:String,
     Tweens:Bool,
     TweensVar:String,
-    TweensNum:Int,
-    TweensDur:Float
+    TweensNum:Int
 }
 
 class MainMenuState extends MusicBeatState
 {
     var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
-        public static var altEngineVersion:String = '1.6.1';
+    public static var altEngineVersion:String = '1.6.1';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -76,6 +75,14 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+	    if (!FlxG.sound.music.playing)
+		{
+			if (FileSystem.exists(Paths.music()))
+			{
+				FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic);
+			}
+		}
+		
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
 		#end
@@ -193,7 +200,7 @@ class MainMenuState extends MusicBeatState
                 menuItem.screenCenter(X);
             }
 			menuItems.add(menuItem);
-                        var scr:Float = (optionShit.length - 4) * 0.135;
+            var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0,scr);
 			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
@@ -314,7 +321,7 @@ class MainMenuState extends MusicBeatState
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
+			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0 * elapsed;
 		}
 
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
@@ -356,9 +363,16 @@ class MainMenuState extends MusicBeatState
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
-						if (curSelected != spr.ID && MainJSON.Tweens == true);
+						if (curSelected != spr.ID && MainJSON.Tweens == true)
 						{
-							FlxTween.tween(spr, {MainJSON.TweensVar: MainJSON.TweensNum }, MainJSON.TveensDur, {
+							FlxTween.tween(spr, {x: -900}, 0.6, {
+							ease: FlxEase.backIn,
+							onComplete: function(twn:FlxTween)
+							{
+								spr.kill();
+							}
+						});
+						    FlxTween.tween(FlxG.camera, {zoom: 1}, 1.1, {
 							ease: FlxEase.backIn,
 							onComplete: function(twn:FlxTween)
 							{
