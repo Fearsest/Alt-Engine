@@ -51,7 +51,8 @@ typedef StoryData =
     TrackListAlignment:String,
     TrackListText:String,
     TrackListSize:Int,
-    centerX:Bool
+    centerX:Bool,
+    StoryFolder:String
 }
 
 class StoryMenuState extends MusicBeatState
@@ -80,11 +81,15 @@ class StoryMenuState extends MusicBeatState
 	var sprDifficulty:FlxSprite;
 
 	var loadedWeeks:Array<WeekData> = [];
+        var WeekSongs:FlxSound;
 
 	override function create()
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+
+                WeekMusic = new FlxSound();
+                FlxG.sound.list.add(WeekMusic);
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
@@ -294,6 +299,7 @@ class StoryMenuState extends MusicBeatState
 
 		if (controls.BACK && !movedBack && !selectedWeek)
 		{
+                        WeekMusic.stop();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			MusicBeatState.switchState(new MainMenuState());
@@ -399,6 +405,12 @@ class StoryMenuState extends MusicBeatState
 			curWeek = 0;
 		if (curWeek < 0)
 			curWeek = loadedWeeks.length - 1;
+                if (curWeek > 0) {
+                WeekMusic.loadEmbedded((StoryJSON.StoryFolder'/Week' + curWeek),true);
+		WeekMusic.volume = 0;
+		WeekMusic.play();
+		WeekMusic.fadeIn(0.5);
+        }
 
 		var leWeek:WeekData = loadedWeeks[curWeek];
 		WeekData.setDirectoryFromWeek(leWeek);
