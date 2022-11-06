@@ -57,6 +57,8 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
+
+        var Music:FlxSound;
 	
 	var optionShit:Array<String> = [
 		'story_mode',
@@ -74,7 +76,13 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic));
+                Music = new FlxSound();
+                FlxG.sound.list.add(Music);
+		FlxG.sound.music.volume = 0;
+
+                Music.loadEmbedded((MainJSON.menuMusic),true);
+		Music.volume = 1;
+		Music.play();
 		
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
@@ -311,11 +319,6 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.8)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0 * elapsed;
-		}
 
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
