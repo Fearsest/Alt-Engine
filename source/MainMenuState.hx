@@ -79,7 +79,7 @@ class MainMenuState extends MusicBeatState
 		{
 			if (FileSystem.exists(Paths.music()))
 			{
-				FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic);
+				FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic));
 			}
 		}
 		
