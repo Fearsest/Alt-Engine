@@ -82,7 +82,7 @@ class StoryMenuState extends MusicBeatState
 	var sprDifficulty:FlxSprite;
 
 	var loadedWeeks:Array<WeekData> = [];
-        var WeekSongs:FlxSound;
+        var WeekMusic:FlxSound;
 
 	override function create()
 	{
