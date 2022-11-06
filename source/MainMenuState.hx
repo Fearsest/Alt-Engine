@@ -42,14 +42,17 @@ typedef MenuData =
     creditsS:Array<Float>,
     optionsS:Array<Float>,
     centerX:Bool,
-    menuBG:String
+    menuBG:String,
+    Tweens:Bool,
+    TweensVar:String,
+    TweensNum:Int
 }
 
 class MainMenuState extends MusicBeatState
 {
     var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
-        public static var altEngineVersion:String = '1.6.0.2h';
+        public static var altEngineVersion:String = '1.6.1';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -352,9 +355,9 @@ class MainMenuState extends MusicBeatState
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
-						if (curSelected != spr.ID)
+						if (curSelected != spr.ID && MainJSON.Tweens == true)
 						{
-							FlxTween.tween(spr, {x: -900}, 0.6, {
+							FlxTween.tween(spr, {MainJSON.TweensVar: MainJSON.TweensNum}, 0.6, {
 							ease: FlxEase.backIn,
 							onComplete: function(twn:FlxTween)
 							{
