@@ -43,6 +43,7 @@ typedef MenuData =
     optionsS:Array<Float>,
     centerX:Bool,
     menuBG:String,
+    Tweens:Bool,
     menuMusic:String
 }
 
@@ -364,7 +365,7 @@ class MainMenuState extends MusicBeatState
 								spr.kill();
 							}
 						});
-						    FlxTween.tween(FlxG.camera, {zoom: 1}, 1.1, {
+						    FlxTween.tween(FlxG.camera, {zoom: 5}, 1.1, {
 							ease: FlxEase.backIn,
 							onComplete: function(twn:FlxTween)
 							{
