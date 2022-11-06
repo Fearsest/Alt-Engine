@@ -406,7 +406,7 @@ class StoryMenuState extends MusicBeatState
 		if (curWeek < 0)
 			curWeek = loadedWeeks.length - 1;
                 if (curWeek > 0) {
-                WeekMusic.loadEmbedded((StoryJSON.StoryFolder'/Week' + curWeek),true);
+                WeekMusic.loadEmbedded((StoryJSON.StoryFolder + '/Week' + curWeek),true);
 		WeekMusic.volume = 0;
 		WeekMusic.play();
 		WeekMusic.fadeIn(0.5);
