@@ -3,6 +3,7 @@ package;
 #if desktop
 import Discord.DiscordClient;
 #end
+import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
