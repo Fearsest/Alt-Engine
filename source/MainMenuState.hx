@@ -75,13 +75,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-	    if (!FlxG.sound.music.playing)
-		{
-			if (FileSystem.exists(Paths.music()))
-			{
-				FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic));
-			}
-		}
+		FlxG.sound.playMusic(Paths.music(MainJSON.menuMusic));
 		
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
