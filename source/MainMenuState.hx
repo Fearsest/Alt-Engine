@@ -45,7 +45,8 @@ typedef MenuData =
     menuBG:String,
     Tweens:Bool,
     TweensVar:String,
-    TweensNum:Int
+    TweensNum:Int,
+    TweensDur:Float
 }
 
 class MainMenuState extends MusicBeatState
@@ -357,7 +358,7 @@ class MainMenuState extends MusicBeatState
 					{
 						if (curSelected != spr.ID && MainJSON.Tweens == true)
 						{
-							FlxTween.tween(spr, {MainJSON.TweensVar: MainJSON.TweensNum}, 0.6, {
+							FlxTween.tween(spr, {MainJSON.TweensVar: MainJSON.TweensNum }, MainJSON.TveensDur, {
 							ease: FlxEase.backIn,
 							onComplete: function(twn:FlxTween)
 							{
