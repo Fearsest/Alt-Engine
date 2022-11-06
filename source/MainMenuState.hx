@@ -43,9 +43,7 @@ typedef MenuData =
     optionsS:Array<Float>,
     centerX:Bool,
     menuBG:String,
-    Tweens:Bool,
-    TweensVar:String,
-    TweensNum:Int
+    menuMusic:String
 }
 
 class MainMenuState extends MusicBeatState
