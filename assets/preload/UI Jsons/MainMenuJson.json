@@ -11,6 +11,8 @@
     "awardsS":[1,1],
     "creditsS":[1,1],
     "optionsS":[1,1],
-    "centerX":false,
-    "menuBG":"menuBG"
+    "centerX":true,
+    "menuBG":"menuDesat",
+    "Tweens":true,
+    "menuMusic":"freakyMenu"
 }
