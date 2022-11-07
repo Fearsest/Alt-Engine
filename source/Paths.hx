@@ -36,7 +36,7 @@ class Paths
 		'custom_events',
 		'custom_notetypes',
 		'data',
-                'jsons',
+                'UI Jsons',
 		'songs',
 		'music',
 		'sounds',
