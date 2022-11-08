@@ -71,8 +71,6 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
-	
-	public static var songName:String = MainJSON.menuMusic;
 
 	override function create()
 	{
