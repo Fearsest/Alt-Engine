@@ -44,13 +44,11 @@ typedef MenuData =
     optionsS:Array<Float>,
     centerX:Bool,
     menuBG:String,
-    Tweens:Bool,
-    menuMusic:String
+    Tweens:Bool
 }
 
 class MainMenuState extends MusicBeatState
 {
-    var Music:FlxSound;
     var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
     public static var altEngineVersion:String = '1.6.1';
@@ -102,17 +100,6 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		persistentUpdate = persistentDraw = true;
-		
-		Music = new FlxSound();
-		if(songName != null) {
-			Music.loadEmbedded((songName), true, true);
-		} else if (songName != MainJSON.menuMusic) {
-			Music.loadEmbedded(songName), true, true);
-		}
-		Music.volume = 1;
-		Music.play();
-
-		FlxG.sound.list.add(Music);
 		
 		MainJSON = Json.parse(Paths.getTextFromFile('UI Jsons/MainMenuData.json'));
 
