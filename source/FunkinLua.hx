@@ -2809,6 +2809,7 @@ class FunkinLua {
 			haxeInterp.variables.set('FlxCamera', FlxCamera);
 			haxeInterp.variables.set('FlxTween', FlxTween);
 			haxeInterp.variables.set('FlxEase', FlxEase);
+                        haxeInterp.variables.set('FlxFlicker',flixel.effects.FlxFlicker);
 			haxeInterp.variables.set('PlayState', PlayState);
 			haxeInterp.variables.set('game', PlayState.instance);
 			haxeInterp.variables.set('Paths', Paths);
