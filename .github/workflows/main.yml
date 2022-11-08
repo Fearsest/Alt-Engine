@@ -1,8 +1,8 @@
-### This is a basic workflow to help you get started with Actions
+# This is a basic workflow to help you get started with Actions
 
-name: Alt Engine build
+name: Alt engine
 
-# Controls when the action will run.
+# Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -16,18 +16,12 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  AndroidBuild:
-    name: AndroidBuild
+  buildAndroid:
+    name: buildAndroid
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.1
-
-      - name: Save state
-        run: echo "::save-state name={name}::{value}"
-
-      - name: output install
-        run: echo "::set-output name={name}::{value}"
 
       - name: Setup Android NDK
         uses: nttld/setup-ndk@v1
@@ -40,15 +34,15 @@ jobs:
         with:
           java-version: 11
 
-      - name: setup Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: haxe setup
+      - name: Setup Haxe
         uses: krdlab/setup-haxe@v1.1.5
         with:
           haxe-version: 4.2.5
 
-      - name: install haxelib
+      - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
           haxelib install hxcpp > /dev/null
@@ -60,15 +54,14 @@ jobs:
           haxelib install flixel-ui
           haxelib install hscript
           haxelib install flixel-addons
-          haxelib git hxCodec https://github.com/MAJigsaw77/hxCodec
+          haxelib git hxCodec https://github.com/polybiusproxy/hxcodec
           haxelib git linc_luajit https://github.com/Sirox228/linc_luajit
           haxelib git extension-androidtools https://github.com/MAJigsaw77/extension-androidtools
           haxelib list
-
-      - name: Version Tag
+      - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
 
-      - name: Lime Setup
+      - name: Setup Lime
         run: |
           haxelib run lime setup -alias -y
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -77,14 +70,15 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
           haxelib set lime 7.9.0
           haxelib set openfl 9.1.0
+          haxelib list
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Compile
         run: haxelib run lime build android --app-version="4.0.0-${{ github.run_id}}"
 
-      - name: Publish Artefact
+      - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: Android build
+          name: Android Build
           path: export/release/android/bin/app/build/outputs/apk/debug
