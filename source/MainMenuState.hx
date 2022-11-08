@@ -58,8 +58,6 @@ class MainMenuState extends MusicBeatState
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
-
-        var Music:FlxSound;
 	
 	var optionShit:Array<String> = [
 		'story_mode',
@@ -77,7 +75,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-                Music = new FlxSound();
+                var Music = new FlxSound();
                 FlxG.sound.list.add(Music);
 		FlxG.sound.music.volume = 0;
 
