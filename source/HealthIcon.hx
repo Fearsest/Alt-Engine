@@ -35,10 +35,6 @@ class HealthIcon extends FlxSprite
 	}
 
 	private var iconOffsets:Array<Float> = [0, 0];
-        if (ClientPrefs.winIcon == true)
-        {
-          private var iconOffsets:Array<Float> = [0, 0, 0];
-        }
 
 	public function changeIcon(char:String) {
 		if(this.char != char) {
@@ -58,6 +54,7 @@ class HealthIcon extends FlxSprite
 			this.char = char;
 
 			if(ClientPrefs.winIcon == true){
+                        private var iconOffsets:Array<Float> = [0, 0, 0];
 			var name:String = 'winicons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-face'; //Prevents crash from missing icon
