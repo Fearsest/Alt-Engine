@@ -54,14 +54,13 @@ class HealthIcon extends FlxSprite
 			this.char = char;
 
 			if(ClientPrefs.winIcon == true){
-                        private var iconOffsets:Array<Float> = [0, 0, 0];
 			var name:String = 'winicons/' + char;
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-' + char; //Older versions of psych engine's support
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-face'; //Prevents crash from missing icon
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Load stupidly first for getting the file size
-			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height)); //Then load it fr
+			loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
 			iconOffsets[0] = (width - 150) / 3;
 			iconOffsets[1] = (width - 150) / 3;
 			iconOffsets[2] = (width - 150) / 3;
