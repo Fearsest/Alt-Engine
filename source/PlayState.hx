@@ -3033,13 +3033,17 @@ class PlayState extends MusicBeatState
 		if (health > 2)
 			health = 2;
 
-		if (healthBar.percent < 20)
+		if (healthBar.percent < 20 && ClientPrefs.winIcon == true)
 			iconP1.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent > 80 && ClientPrefs.winIcon == true)
+		    iconP1.animation.curAnim.curFrame = 2;	
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
-		if (healthBar.percent > 80)
+		if (healthBar.percent > 80 && ClientPrefs.winIcon == true)
 			iconP2.animation.curAnim.curFrame = 1;
+	        else if (healthBar.percent < 20 && ClientPrefs.winIcon == true)
+			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
 
