@@ -33,9 +33,11 @@ class HealthIcon extends FlxSprite
 		if(isOldIcon = !isOldIcon) changeIcon('bf-old');
 		else changeIcon('bf');
 	}
-
-	private var iconOffsets:Array<Float> = [0, 0];
-
+        if(ClientPrefs.winIcon){
+	private var iconOffsets:Array<Float> = [0, 0, 0];
+        } else {
+        private var iconOffsets:Array<Float> = [0, 0];
+        }
 	public function changeIcon(char:String) {
 		if(this.char != char) {
 			var name:String = 'icons/' + char;
