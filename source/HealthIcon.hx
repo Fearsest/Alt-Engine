@@ -44,22 +44,6 @@ class HealthIcon extends FlxSprite
 			var file:Dynamic = Paths.image(name);
 
 			loadGraphic(file); //Load stupidly first for getting the file size
-			loadGraphic(file, true, Math.floor(width / 2), Math.floor(height)); //Then load it fr
-			iconOffsets[0] = (width - 150) / 2;
-			iconOffsets[1] = (width - 150) / 2;
-			updateHitbox();
-
-			animation.add(char, [0, 1], 0, false, isPlayer);
-			animation.play(char);
-			this.char = char;
-
-			if(ClientPrefs.winIcon == true){
-			var name:String = 'winicons/' + char;
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-' + char; //Older versions of psych engine's support
-			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'winicons/icon-face'; //Prevents crash from missing icon
-			var file:Dynamic = Paths.image(name);
-
-			loadGraphic(file); //Load stupidly first for getting the file size
 			loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr
 			iconOffsets[0] = (width - 150) / 3;
 			iconOffsets[1] = (width - 150) / 3;
@@ -70,8 +54,6 @@ class HealthIcon extends FlxSprite
 			animation.play(char);
 			this.char = char;
 
-			antialiasing = ClientPrefs.globalAntialiasing;
-			}
 			if(char.endsWith('-pixel')) {
 				antialiasing = false;
 			}
