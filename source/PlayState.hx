@@ -172,7 +172,7 @@ class PlayState extends MusicBeatState
 	public var combo:Int = 0;
 
 	private var healthBarBG:AttachedSprite;
-	public var healthBar:FlxBar;
+    public var healthBar:FlxBar;
 	var songPercent:Float = 0;
 
 	private var timeBarBG:AttachedSprite;
@@ -3027,22 +3027,23 @@ class PlayState extends MusicBeatState
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
-
+		var percent:Float = 1 - (fakeHealth / 2);
+        iconP1.x = healthBar.x + (healthBar.width * percent) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+        iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
+        
 		if (health > 2)
 			health = 2;
 
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
 		else if (healthBar.percent > 80 && ClientPrefs.winIcon == true)
-		    iconP1.animation.curAnim.curFrame = 2;	
+			iconP1.animation.curAnim.curFrame = 2; 
 		else
 			iconP1.animation.curAnim.curFrame = 0;
 
 		if (healthBar.percent > 80)
 			iconP2.animation.curAnim.curFrame = 1;
-	        else if (healthBar.percent < 20 && ClientPrefs.winIcon == true)
+		else if (healthBar.percent < 20 && ClientPrefs.winIcon == true)
 			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
