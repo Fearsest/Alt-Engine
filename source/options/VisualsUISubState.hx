@@ -106,7 +106,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		option.onChange = onChangePauseMusic;
 		var option:Option = new Option('Winning icons',
-			"",
+			"This option includes winning icons.",
 			'winIcon',
 			'bool',
 			false);
