@@ -521,8 +521,10 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...iconArray.length)
 		{
 			iconArray[i].alpha = FreeplayJSON.iconAlpha[0];
+                        iconArray[i].animation.curAnim.curFrame = 0; 
 		}
 
+                iconArray[curSelected].animation.curAnim.curFrame = 2; 
 		iconArray[curSelected].alpha = FreeplayJSON.iconAlpha[1];
 
 		for (item in grpSongs.members)
