@@ -3387,7 +3387,7 @@ class CustomSubstate extends MusicBeatSubstate
 		CustomSubstate.name = name;
 		super();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-	}8
+	}
 
 	override function update(elapsed:Float)
 	{
