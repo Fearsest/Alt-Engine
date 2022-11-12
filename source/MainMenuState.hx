@@ -350,17 +350,10 @@ class MainMenuState extends MusicBeatState
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
-						if (curSelected != spr.ID && MainJSON.Tweens == true)
+						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {x: -900}, 0.6, {
-							ease: FlxEase.backIn,
-							onComplete: function(twn:FlxTween)
-							{
-								spr.kill();
-							}
-						});
-						    FlxTween.tween(FlxG.camera, {zoom: 5}, 1.1, {
-							ease: FlxEase.backIn,
+							FlxTween.tween(spr, {alpha: 0}, 0.6, {
+							ease: FlxEase.linear,
 							onComplete: function(twn:FlxTween)
 							{
 								spr.kill();
