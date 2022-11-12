@@ -127,6 +127,8 @@ class FunkinLua {
 		set('songName', PlayState.SONG.song);
 		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
                 set('winIcons',ClientPrefs.winIcon);
+                set('instVolume',ClientPrefs.instVolume);
+                set('vocalVolume',ClientPrefs.vocalVolume);
 		set('startedCountdown', false);
 
 		set('isStoryMode', PlayState.isStoryMode);
@@ -3385,7 +3387,7 @@ class CustomSubstate extends MusicBeatSubstate
 		CustomSubstate.name = name;
 		super();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-	}
+	}8
 
 	override function update(elapsed:Float)
 	{
