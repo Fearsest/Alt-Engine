@@ -329,7 +329,3 @@ class MultiCallback
 	public function getFired() return fired.copy();
 	public function getUnfired() return [for (id in unfired.keys()) id];
 }
-public function setLoadingText(text:String)
-    {
-        loadTxt.text = text;
-    }
