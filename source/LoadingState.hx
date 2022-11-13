@@ -198,7 +198,6 @@ class LoadingState extends MusicBeatState
 	{
 		return Assets.getLibrary(library) != null;
 	}
-	#end
 	
 	override function destroy()
 	{
