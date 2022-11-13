@@ -19,6 +19,8 @@ import haxe.io.Path;
 class LoadingState extends MusicBeatState
 {
 	inline static var MIN_TIME = 1.0;
+        public var progress:Int = 0;
+	public var max:Int = 10;
 
 	// Browsers will load create(), you can make your song load a custom directory there
 	// If you're compiling to desktop (or something that doesn't use NO_PRELOAD_ALL), search for getNextState instead
@@ -41,7 +43,7 @@ class LoadingState extends MusicBeatState
 	}
 
 	var funkay:FlxSprite;
-	var loadBar:FlxSprite;
+	var loadTxtProgress:FlxSprite;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
@@ -53,11 +55,23 @@ class LoadingState extends MusicBeatState
 		add(funkay);
 		funkay.scrollFactor.set();
 		funkay.screenCenter();
+                
+                var loadTxt:FlxText = new FlxText(0,0,0, "Loading...", 30);
+	        loadTxt.scrollFactor.set();
+                loadTxt.x = 5;
+                loadTxt.y = FlxG.height - loadTxt.height - 5;
+		loadTxt.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(loadTxt);
 
-		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
-		loadBar.screenCenter(X);
-		loadBar.antialiasing = ClientPrefs.globalAntialiasing;
-		add(loadBar);
+		loadTxtProgress.makeGraphic(1, 1, 0xFFFFFFFF);
+		loadTxtProgress.updateHitbox();
+		loadTxtProgress.origin.set();
+		loadTxtProgress.scale.set(0, loadTxt.height + 5);
+		loadTxtProgress.alpha = 0.3;
+		loadTxtProgress.y = loadTxt.y;
+
+		loadTxt.y += 2;
+                add(loadTxtProgress);
 		
 		initSongsManifest().onComplete
 		(
@@ -122,8 +136,8 @@ class LoadingState extends MusicBeatState
 		}
 
 		if(callbacks != null) {
-			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
+                var lerpTarget:Float = 1280.0 * (progress / max);
+		loadTxtProgress.scale.x = FlxMath.lerp(loadTxtProgress.scale.x, lerpTarget, elapsed * 5);
 		}
 	}
 	
@@ -161,7 +175,6 @@ class LoadingState extends MusicBeatState
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
 
-		#if NO_PRELOAD_ALL
 		var loaded:Bool = false;
 		if (PlayState.SONG != null) {
 			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
@@ -169,14 +182,13 @@ class LoadingState extends MusicBeatState
 		
 		if (!loaded)
 			return new LoadingState(target, stopMusic, directory);
-		#end
+
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		return target;
 	}
 	
-	#if NO_PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool
 	{
 		return Assets.cache.hasSound(path);
@@ -318,3 +330,7 @@ class MultiCallback
 	public function getFired() return fired.copy();
 	public function getUnfired() return [for (id in unfired.keys()) id];
 }
+public function setLoadingText(text:String)
+    {
+        loadTxt.text = text;
+    }
