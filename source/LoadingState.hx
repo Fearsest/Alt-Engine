@@ -8,6 +8,8 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
@@ -19,7 +21,9 @@ import haxe.io.Path;
 class LoadingState extends MusicBeatState
 {
 	inline static var MIN_TIME = 1.0;
-        
+        public var progress:Int = 0;
+	public var max:Int = 10;
+
 	// Browsers will load create(), you can make your song load a custom directory there
 	// If you're compiling to desktop (or something that doesn't use NO_PRELOAD_ALL), search for getNextState instead
 	// I'd recommend doing it on both actually lol
@@ -45,8 +49,6 @@ class LoadingState extends MusicBeatState
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
-                var progress:Int = 0;
-	        var max:Int = 10;
 		add(bg);
 		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
 		funkay.setGraphicSize(0, FlxG.height);
