@@ -8,21 +8,26 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
-
+import flixel.text.FlxText;
+import flixel.graphics.FlxGraphic;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+
+#if android
+import sys.FileSystem;
+import sys.io.File;
+#end
 
 import haxe.io.Path;
 
 class LoadingState extends MusicBeatState
 {
 	inline static var MIN_TIME = 1.0;
-        public var progress:Int = 0;
-	public var max:Int = 10;
 
 	// Browsers will load create(), you can make your song load a custom directory there
 	// If you're compiling to desktop (or something that doesn't use NO_PRELOAD_ALL), search for getNextState instead
@@ -35,6 +40,8 @@ class LoadingState extends MusicBeatState
 	var directory:String;
 	var callbacks:MultiCallback;
 	var targetShit:Float = 0;
+	
+	var shitz:FlxText;
 
 	function new(target:FlxState, stopMusic:Bool, directory:String)
 	{
@@ -45,7 +52,7 @@ class LoadingState extends MusicBeatState
 	}
 
 	var funkay:FlxSprite;
-	var loadTxtProgress:FlxSprite;
+	var loadBar:FlxSprite;
 	override function create()
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
@@ -57,23 +64,16 @@ class LoadingState extends MusicBeatState
 		add(funkay);
 		funkay.scrollFactor.set();
 		funkay.screenCenter();
-                
-                var loadTxt:FlxText = new FlxText(0,0,0, "Loading...", 30);
-	        loadTxt.scrollFactor.set();
-                loadTxt.x = 5;
-                loadTxt.y = FlxG.height - loadTxt.height - 5;
-		loadTxt.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(loadTxt);
-
-		loadTxtProgress.makeGraphic(1, 1, 0xFFFFFFFF);
-		loadTxtProgress.updateHitbox();
-		loadTxtProgress.origin.set();
-		loadTxtProgress.scale.set(0, loadTxt.height + 5);
-		loadTxtProgress.alpha = 0.3;
-		loadTxtProgress.y = loadTxt.y;
-
-		loadTxt.y += 2;
-                add(loadTxtProgress);
+		
+        shitz = new FlxText(12, 630, 300, "Loading...", 12);
+		shitz.scrollFactor.set();
+		shitz.setFormat("VCR OSD Mono", 50, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(shitz);
+		
+		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
+		loadBar.screenCenter(X);
+		loadBar.antialiasing = ClientPrefs.globalAntialiasing;
+		add(loadBar);
 		
 		initSongsManifest().onComplete
 		(
@@ -138,8 +138,8 @@ class LoadingState extends MusicBeatState
 		}
 
 		if(callbacks != null) {
-                var lerpTarget:Float = 1280.0 * (progress / max);
-		loadTxtProgress.scale.x = FlxMath.lerp(loadTxtProgress.scale.x, lerpTarget, elapsed * 5);
+			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
+			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
 		}
 	}
 	
@@ -177,6 +177,7 @@ class LoadingState extends MusicBeatState
 		Paths.setCurrentLevel(directory);
 		trace('Setting asset folder to ' + directory);
 
+		#if NO_PRELOAD_ALL
 		var loaded:Bool = false;
 		if (PlayState.SONG != null) {
 			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
@@ -184,13 +185,14 @@ class LoadingState extends MusicBeatState
 		
 		if (!loaded)
 			return new LoadingState(target, stopMusic, directory);
-
+		#end
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
 		return target;
 	}
 	
+	#if PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool
 	{
 		return Assets.cache.hasSound(path);
@@ -200,6 +202,7 @@ class LoadingState extends MusicBeatState
 	{
 		return Assets.getLibrary(library) != null;
 	}
+	#end
 	
 	override function destroy()
 	{
