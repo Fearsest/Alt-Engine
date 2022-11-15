@@ -152,7 +152,7 @@ class LoadingState extends MusicBeatState
 		}
 
 		if(callbacks != null) {
-			lerpTarget = 1280.0 * (progress / max)
+			lerpTarget = 1280.0 * (progress / max);
 			loadBar.scale.x = FlxMath.lerp(loadBar.scale.x, lerpTarget, elapsed * 5);
 		}
 	}
