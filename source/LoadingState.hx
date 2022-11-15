@@ -17,6 +17,10 @@ import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+#if MODS_ALLOWED
+import sys.FileSystem;
+import sys.io.File;
+#end
 
 #if android
 import sys.FileSystem;
@@ -35,6 +39,9 @@ class LoadingState extends MusicBeatState
 	
 	// TO DO: Make this easier
 	
+        public var progress:Int = 0;
+	public var max:Int = 10;
+
 	var target:FlxState;
 	var stopMusic = false;
 	var directory:String;
@@ -57,7 +64,7 @@ class LoadingState extends MusicBeatState
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
 		add(bg);
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay', IMAGE));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.globalAntialiasing;
@@ -65,15 +72,21 @@ class LoadingState extends MusicBeatState
 		funkay.scrollFactor.set();
 		funkay.screenCenter();
 		
-        shitz = new FlxText(12, 630, 300, "Loading...", 12);
+                shitz = new FlxText(12, 630, 300, "Loading...", 12);
 		shitz.scrollFactor.set();
 		shitz.setFormat("VCR OSD Mono", 50, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(shitz);
 		
-		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
-		loadBar.screenCenter(X);
-		loadBar.antialiasing = ClientPrefs.globalAntialiasing;
+		loadBar = new FlxSprite();
 		add(loadBar);
+                loadBar.makeGraphic(1, 1, 0xFFFFFFFF);
+		loadBar.updateHitbox();
+		loadBar.origin.set();
+		loadBar.scale.set(0, shitz.height + 5);
+		loadBar.alpha = 0.3;
+		loadBar.y = shitz.y;
+
+		shits.y += 2;
 		
 		initSongsManifest().onComplete
 		(
@@ -133,7 +146,8 @@ class LoadingState extends MusicBeatState
 		funkay.updateHitbox();
 		if(controls.ACCEPT)
 		{
-			funkay.setGraphicSize(Std.int(funkay.width + 60));
+			var lerpTarget:Float = 1280.0 * (progress / max);
+		        loadBar.scale.x = FlxMath.lerp(loadTxtProgress.scale.x, lerpTarget, elapsed * 5);
 			funkay.updateHitbox();
 		}
 
