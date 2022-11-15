@@ -46,7 +46,7 @@ class LoadingState extends MusicBeatState
 	var stopMusic = false;
 	var directory:String;
 	var callbacks:MultiCallback;
-	var targetShit:Float = 0;
+	var lerpTarget:Float = 1280.0;
 	
 	var shitz:FlxText;
 
@@ -64,7 +64,7 @@ class LoadingState extends MusicBeatState
 	{
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
 		add(bg);
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay', IMAGE));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.globalAntialiasing;
@@ -86,7 +86,7 @@ class LoadingState extends MusicBeatState
 		loadBar.alpha = 0.3;
 		loadBar.y = shitz.y;
 
-		shits.y += 2;
+		shitz.y += 2;
 		
 		initSongsManifest().onComplete
 		(
@@ -147,13 +147,13 @@ class LoadingState extends MusicBeatState
 		if(controls.ACCEPT)
 		{
 			var lerpTarget:Float = 1280.0 * (progress / max);
-		        loadBar.scale.x = FlxMath.lerp(loadTxtProgress.scale.x, lerpTarget, elapsed * 5);
+		    loadBar.scale.x = FlxMath.lerp(loadBar.scale.x, lerpTarget, elapsed * 5);
 			funkay.updateHitbox();
 		}
 
 		if(callbacks != null) {
-			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
+			lerpTarget = 1280.0 * (progress / max)
+			loadBar.scale.x = FlxMath.lerp(loadBar.scale.x, lerpTarget, elapsed * 5);
 		}
 	}
 	
