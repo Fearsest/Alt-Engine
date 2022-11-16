@@ -46,7 +46,6 @@ class LoadingState extends MusicBeatState
 	var stopMusic = false;
 	var directory:String;
 	var callbacks:MultiCallback;
-	var lerpTarget:Float = 1280.0;
 	
 	var shitz:FlxText;
 
@@ -142,19 +141,9 @@ class LoadingState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		funkay.setGraphicSize(Std.int(0.88 * FlxG.width + 0.9 * (funkay.width - 0.88 * FlxG.width)));
-		funkay.updateHitbox();
-		if(controls.ACCEPT)
-		{
-			var lerpTarget:Float = 1280.0 * (progress / max);
+		
+		var lerpTarget:Float = 1280.0 * (progress / max);
 		    loadBar.scale.x = FlxMath.lerp(loadBar.scale.x, lerpTarget, elapsed * 5);
-			funkay.updateHitbox();
-		}
-
-		if(callbacks != null) {
-			lerpTarget = 1280.0 * (progress / max);
-			loadBar.scale.x = FlxMath.lerp(loadBar.scale.x, lerpTarget, elapsed * 5);
-		}
 	}
 	
 	function onLoad()
