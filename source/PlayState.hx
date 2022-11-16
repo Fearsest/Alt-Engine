@@ -2269,6 +2269,7 @@ class PlayState extends MusicBeatState
 		
 	}
 	#end
+}
     private function doIntro(startTime:Float, ?doDance:Bool = false):Void
 	{
 		var swagCounter:Int = 0;
