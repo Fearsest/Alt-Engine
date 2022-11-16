@@ -5537,7 +5537,7 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
-}
+
 private function callOnScripts(funcName:String, args:Array<Dynamic>):Dynamic
 	{
 		var value:Dynamic = ScriptCore.Function_Continue;
@@ -5551,5 +5551,7 @@ private function callOnScripts(funcName:String, args:Array<Dynamic>):Dynamic
 		}
 
 		return value;
-	}
+	
 }
+}
+
