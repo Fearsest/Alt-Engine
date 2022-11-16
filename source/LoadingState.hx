@@ -17,6 +17,7 @@ import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.group.FlxGroup.FlxTypedGroup;
 #if MODS_ALLOWED
 import sys.FileSystem;
 import sys.io.File;
@@ -29,7 +30,7 @@ import sys.io.File;
 
 import haxe.io.Path;
 
-class LoadingState extends MusicBeatState
+class LoadingState extends FlxTypedGroup<FlxSprite>
 {
 	inline static var MIN_TIME = 1.0;
 
