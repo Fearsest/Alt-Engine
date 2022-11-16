@@ -82,7 +82,7 @@ class LoadingState extends MusicBeatState
                 loadBar.makeGraphic(1, 1, 0xFFFFFFFF);
 		loadBar.updateHitbox();
 		loadBar.origin.set();
-		loadBar.scale.set(0, shitz.height + 5);
+		loadBar.scale.set(1, shitz.height + 5);
 		loadBar.alpha = 0.3;
 		loadBar.y = shitz.y;
 
