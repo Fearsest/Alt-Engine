@@ -52,6 +52,7 @@ jobs:
           haxelib run lime setup flixel
           haxelib install flixel-tools
           haxelib install flixel-ui
+          haxelib install polymod
           haxelib install hscript
           haxelib install flixel-addons
           haxelib git hxCodec https://github.com/polybiusproxy/hxcodec
