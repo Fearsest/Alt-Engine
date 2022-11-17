@@ -36,7 +36,7 @@ class Paths
 		'custom_events',
 		'custom_notetypes',
 		'data',
-                'UI Jsons',
+        'UI Jsons',
 		'songs',
 		'music',
 		'sounds',
@@ -177,7 +177,11 @@ class Paths
 	{
 		return getPath('data/$key.json', TEXT, library);
 	}
-
+	
+	inline static public function hx(key:String):String
+	{
+	    return getPath('$key.hx', TEXT, library);
+	}
 	inline static public function shaderFragment(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.frag', TEXT, library);
@@ -425,7 +429,11 @@ class Paths
 	inline static public function modsTxt(key:String) {
 		return modFolders('images/' + key + '.txt');
 	}
-
+    inline static public function modsHx(key:String):String
+	{
+	    return modFolders('scripts/', key, '.hx');
+	}
+	
 	/* Goes unused for now
 
 	inline static public function modsShaderFragment(key:String, ?library:String)
