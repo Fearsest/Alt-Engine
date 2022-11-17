@@ -307,6 +307,9 @@ class PlayState extends MusicBeatState
 	private var keysArray:Array<Dynamic>;
 	private var controlArray:Array<String>;
 
+        //hscript
+        public var script:HaxeScript;
+
 	var precacheList:Map<String, String> = new Map<String, String>();
 
 	override public function create()
@@ -5296,13 +5299,13 @@ class PlayState extends MusicBeatState
     public function startScript()
 	{
 		var formattedFolder:String = Paths.formatToSongPath(SONG.song);
+                var hxName:String = "";
 		#if MODS_ALLOWED
 		var path:String = Paths.modsHx('scripts/' + hxName + '.hx');
         #else
 		var path:String = Paths.hscript(formattedFolder + '/script');
         #end
 		var hxdata:String = "";
-		var hxName:String = "";
 
 		if (FileSystem.exists(path))
 			hxdata = File.getContent(path);
