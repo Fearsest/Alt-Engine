@@ -5304,7 +5304,7 @@ class PlayState extends MusicBeatState
 		var formattedFolder:String = Paths.formatToSongPath(SONG.song);
                 var hxName:String = "";
 		#if MODS_ALLOWED
-		var path:String = Paths.modsHx('scripts/' + hxName + '.hx');
+		var path:String = Paths.modsHx(hxName + '.hx');
         #else
 		var path:String = Paths.hscript(formattedFolder + '/script');
         #end
