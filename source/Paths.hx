@@ -178,9 +178,9 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 	
-	inline static public function hx(key:String):String
+	inline static public function hscript(key:String, ?library:String)
 	{
-	    return getPath('$key.hx', TEXT, library);
+		return getPath('data/$key.hx', TEXT, library);
 	}
 	inline static public function shaderFragment(key:String, ?library:String)
 	{
@@ -431,7 +431,7 @@ class Paths
 	}
     inline static public function modsHx(key:String):String
 	{
-	    return modFolders('scripts/', key, '.hx');
+	    return modFolders('scripts/' + key + '.hx');
 	}
 	
 	/* Goes unused for now
