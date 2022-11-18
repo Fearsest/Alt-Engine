@@ -54,15 +54,11 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
 import flixel.util.FlxSave;
 import animateatlas.AtlasFrameMaker;
-import openfl.events.Event;
-import openfl.events.KeyboardEvent;
-import openfl.events.ProgressEvent;
 import Achievements;
 import StageData;
 import FunkinLua;
 import DialogueBoxPsych;
 import Conductor.Rating;
-import HaxeScript;
 
 #if !flash 
 import flixel.addons.display.FlxRuntimeShader;
@@ -95,7 +91,7 @@ class PlayState extends MusicBeatState
 		['Good', 0.8], //From 70% to 79%
 		['Great', 0.9], //From 80% to 89%
 		['Sick!', 1], //From 90% to 99%
-		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['IMPOSSIBLE!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
@@ -309,9 +305,6 @@ class PlayState extends MusicBeatState
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
 	private var controlArray:Array<String>;
-
-        //hscript
-        public var script:HaxeScript;
 
 	var precacheList:Map<String, String> = new Map<String, String>();
 
@@ -1072,9 +1065,6 @@ class PlayState extends MusicBeatState
 		// startCountdown();
 
 		generateSong(SONG.song);
-		
-		startScript();
-		
 		#if LUA_ALLOWED
 		for (notetype in noteTypeMap.keys())
 		{
@@ -1387,10 +1377,6 @@ class PlayState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		
 		CustomFadeTransition.nextCamera = camOther;
-		if (script != null)
-		{
-			script.executeFunc("create");
-		}
 	}
 
 	#if (!flash && sys)
@@ -2072,10 +2058,6 @@ class PlayState extends MusicBeatState
 	{
 		if(startedCountdown) {
 			callOnLuas('onStartCountdown', []);
-		if (script != null)
-		{
-			script.executeFunc("startCountdown");
-		}
 			return;
 		}
 
@@ -2391,10 +2373,6 @@ class PlayState extends MusicBeatState
 		#end
 		setOnLuas('songLength', songLength);
 		callOnLuas('onSongStart', []);
-		if (script != null)
-		{
-			script.executeFunc("songStart");
-		}
 	}
 
 	var debugNum:Int = 0;
@@ -2869,11 +2847,6 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
-		
-		if (script != null)
-		{
-			script.executeFunc("update");
-		}
 
 		switch (curStage)
 		{
@@ -3073,7 +3046,7 @@ class PlayState extends MusicBeatState
 			iconP2.animation.curAnim.curFrame = 2;
 		else
 			iconP2.animation.curAnim.curFrame = 0;
-		
+
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			persistentUpdate = false;
 			paused = true;
@@ -4937,13 +4910,6 @@ class PlayState extends MusicBeatState
 			lua.stop();
 		}
 		luaArray = [];
-		
-		if (script != null)
-		{
-			script.executeFunc("destroy");
-
-			script.destroy();
-		}
 
 		if(!ClientPrefs.controllerMode)
 		{
@@ -4980,11 +4946,6 @@ class PlayState extends MusicBeatState
 		lastStepHit = curStep;
 		setOnLuas('curStep', curStep);
 		callOnLuas('onStepHit', []);
-		if (script != null)
-		{
-			script.setVariable("Step", curStep);
-			script.executeFunc("stepHit");
-		}
 	}
 
 	var lightningStrikeBeat:Int = 0;
@@ -5298,88 +5259,4 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
-   
-    public function startScript()
-	{
-		var formattedFolder:String = Paths.formatToSongPath(SONG.song);
-                var hxName:String = "";
-		#if MODS_ALLOWED
-		var path:String = Paths.modsHx(hxName + '.hx');
-        #else
-		var path:String = Paths.hscript(formattedFolder + '/script');
-        #end
-		var hxdata:String = "";
-
-		if (FileSystem.exists(path))
-			hxdata = File.getContent(path);
-
-		if (hxdata != "")
-		{
-			script = new HaxeScript();
-
-			script.setVariable("songStart", function()
-			{
-			});
-
-			script.setVariable("destroy", function()
-			{
-			});
-
-			script.setVariable("create", function()
-			{
-			});
-
-			script.setVariable("startCountdown", function()
-			{
-			});
-
-			script.setVariable("stepHit", function()
-			{
-			});
-
-			script.setVariable("update", function()
-			{
-			});
-
-			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
-			{
-				if (lib != null && Type.resolveClass(lib) != null)
-				{
-					script.setVariable(as != null ? as : lib, Type.resolveClass(lib));
-				}
-			});
-
-			script.setVariable("fromRGB", function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
-			{
-				return FlxColor.fromRGB(Red, Green, Blue, Alpha);
-			});
-
-			script.setVariable("Step", curStep);
-			script.setVariable("bpm", SONG.bpm);
-
-			// PRESET CLASSES
-			script.setVariable("PlayState", instance);
-			script.setVariable("FlxTween", FlxTween);
-			script.setVariable("FlxEase", FlxEase);
-			script.setVariable("FlxSprite", FlxSprite);
-			script.setVariable("Math", Math);
-			script.setVariable("FlxG", FlxG);
-			script.setVariable("ClientPrefs", ClientPrefs);
-			script.setVariable("FlxTimer", FlxTimer);
-			script.setVariable("Main", Main);
-			script.setVariable("Event", Event);
-			script.setVariable("Conductor", Conductor);
-			script.setVariable("Std", Std);
-			script.setVariable("FlxTextBorderStyle", FlxTextBorderStyle);
-			script.setVariable("Paths", Paths);
-			script.setVariable("CENTER", FlxTextAlign.CENTER);
-			script.setVariable("FlxTextFormat", FlxTextFormat);
-			script.setVariable("InputFormatter", InputFormatter);
-			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
-
-			script.runScript(hxdata);
-			
-	// Thanks to lunarcleint for hscript!!
-		}
-	}
 }
