@@ -29,6 +29,7 @@ class Paths
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	inline public static var VIDEO_EXT = "mp4";
+    inline public static var TEXT_EXT = "hx";
 
 	#if MODS_ALLOWED
 	public static var ignoreModFolders:Array<String> = [
@@ -431,7 +432,7 @@ class Paths
 	}
     inline static public function modsHx(key:String):String
 	{
-	    return modFolders('scripts/' + key + '.hx');
+	    return modFolders('scripts/' + key + TEXT_EXT);
 	}
 	
 	/* Goes unused for now
