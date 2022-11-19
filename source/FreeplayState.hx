@@ -53,7 +53,11 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
-        var icon:HealthIcon;
+    var timerText:FlxText;
+    var icon:HealthIcon;
+    var songLength:Float = 0;
+    var updateTime:Bool = true;
+    var showTime:Bool = true;
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -171,6 +175,17 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
+	timerText = new FlxText(500, 19, 400, "", 20);
+	timerText.setFormat(Paths.font("vcr.ttf"), 20, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
+	timerText.scrollFactor.set();
+	timerText.screenCenter(X);
+	timerText.alpha = 0;
+	timerText.borderSize = 2;
+	timerText.visible = showTime;
+	
+	updateTime = showTime;
+	add(timer);
+    songLength = FlxG.sound.music.length;
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
@@ -289,6 +304,19 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+	    if(updateTime)
+        {
+    var curTime:Float = Conductor.songPosition;
+	if(curTime < 0) curTime = 0;
+	songPercent = (curTime / songLength);
+
+	var songCalc:Float = (songLength = curTime);
+
+	var secondsTotal:Int = Math.floor(songCalc / 1000);
+	if(secondsTotal < 0) secondsTotal = 0;
+	timerText.text = FlxStringUtil.formatTime(secondsTotal, false);
+    }
+       
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
@@ -387,6 +415,7 @@ class FreeplayState extends MusicBeatState
 		{
 			if(instPlaying != curSelected)
 			{
+			    FlxTween.tween(timerText, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
