@@ -179,8 +179,8 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-	timerText = new FlxText(500, 19, 400, "", 20);
-	timerText.setFormat(Paths.font("vcr.ttf"), 20, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
+	timerText = new FlxText(500, 19, 400, "", 32);
+	timerText.setFormat(Paths.font("vcr.ttf"), 32, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
 	timerText.scrollFactor.set();
 	timerText.screenCenter(X);
 	timerText.alpha = 0;
@@ -189,7 +189,6 @@ class FreeplayState extends MusicBeatState
 	
 	updateTime = showTime;
 	add(timerText);
-    songLength = FlxG.sound.music.length;
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
@@ -304,13 +303,15 @@ class FreeplayState extends MusicBeatState
 	}*/
 
 	var instPlaying:Int = -1;
+	public static var inst:FlxSound = null;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-	    if(updateTime)
-        {
-    var curTime:Float = Conductor.songPosition;
+	    songLength = FlxG.sound.music.length;
+	if(updateTime)
+    {
+    var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
 	if(curTime < 0) curTime = 0;
 	songPercent = (curTime / songLength);
 
@@ -427,16 +428,23 @@ class FreeplayState extends MusicBeatState
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
+				{
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-				else
+				} else{
 					vocals = new FlxSound();
-
+				}
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+				inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song));
+				inst.play();
+				inst.persist = true;
+				inst.looped = true;
+				inst.volume = 0.8;
+				FlxG.sound.list.add(inst);
 				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
-				vocals.volume = 0.7;
+				vocals.volume = 1;
+				curSelected = inst;
 				instPlaying = curSelected;
 				#end
 			}
