@@ -19,6 +19,9 @@ import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
 import haxe.Json;
+import flixel.util.FlxStringUtil;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
@@ -66,6 +69,7 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
     var FreeplayJSON:FreePlayData;
+    var songPercent:Float = 0;
     
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
@@ -184,7 +188,7 @@ class FreeplayState extends MusicBeatState
 	timerText.visible = showTime;
 	
 	updateTime = showTime;
-	add(timer);
+	add(timerText);
     songLength = FlxG.sound.music.length;
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
