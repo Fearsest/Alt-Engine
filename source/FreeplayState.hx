@@ -308,7 +308,7 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-	    songLength = FlxG.sound.music.length;
+	songLength = FlxG.sound.music.length;
 	if(updateTime)
     {
     var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
@@ -428,23 +428,16 @@ class FreeplayState extends MusicBeatState
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
-				{
+				
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-				} else{
+				else
 					vocals = new FlxSound();
-				}
 				FlxG.sound.list.add(vocals);
-				inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song));
-				inst.play();
-				inst.persist = true;
-				inst.looped = true;
-				inst.volume = 0.8;
-				FlxG.sound.list.add(inst);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song),0.7);
 				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
 				vocals.volume = 1;
-				curSelected = inst;
 				instPlaying = curSelected;
 				#end
 			}
