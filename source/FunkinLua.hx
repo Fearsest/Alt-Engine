@@ -11,6 +11,8 @@ import flixel.addons.effects.FlxTrail;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.effects.FlxFlicker;
+import flixel.ui.FlxBar;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -2812,7 +2814,7 @@ class FunkinLua {
 			haxeInterp.variables.set('FlxCamera', FlxCamera);
 			haxeInterp.variables.set('FlxTween', FlxTween);
 			haxeInterp.variables.set('FlxEase', FlxEase);
-                        haxeInterp.variables.set('FlxFlicker',flixel.effects.FlxFlicker);
+            haxeInterp.variables.set('FlxFlicker',FlxFlicker);
 			haxeInterp.variables.set('PlayState', PlayState);
 			haxeInterp.variables.set('game', PlayState.instance);
 			haxeInterp.variables.set('Paths', Paths);
@@ -2824,6 +2826,7 @@ class FunkinLua {
 			#if android
 			haxeInterp.variables.set('MusicBeatSubstate',MusicBeatSubstate);
 			#end
+			haxeInterp.variables.set('FlxBar',FlxBar);
 			
 			#if !flash
 			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
