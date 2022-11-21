@@ -189,6 +189,21 @@ class FreeplayState extends MusicBeatState
 	
 	updateTime = showTime;
 	add(timerText);
+	songLength = FlxG.sound.music.length;
+	
+	if(updateTime)
+    {
+    var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
+	if(curTime < 0) curTime = 0;
+	songPercent = (curTime / songLength);
+
+	var songCalc:Float = (songLength = curTime);
+
+	var secondsTotal:Int = Math.floor(songCalc / 1000);
+	if(secondsTotal < 0) secondsTotal = 0;
+	timerText.text = FlxStringUtil.formatTime(secondsTotal, false);
+    }
+    
         scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
 		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
 
@@ -308,20 +323,6 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-	songLength = FlxG.sound.music.length;
-	if(updateTime)
-    {
-    var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
-	if(curTime < 0) curTime = 0;
-	songPercent = (curTime / songLength);
-
-	var songCalc:Float = (songLength = curTime);
-
-	var secondsTotal:Int = Math.floor(songCalc / 1000);
-	if(secondsTotal < 0) secondsTotal = 0;
-	timerText.text = FlxStringUtil.formatTime(secondsTotal, false);
-    }
-       
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
