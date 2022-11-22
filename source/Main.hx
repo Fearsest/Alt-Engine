@@ -76,8 +76,8 @@ class Main extends Sprite
 
 		if (zoom == -1)
 		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
+			var ratioX:Int = stageWidth / gameWidth;
+			var ratioY:Int = stageHeight / gameHeight;
 			zoom = Math.min(ratioX, ratioY);
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
@@ -86,7 +86,7 @@ class Main extends Sprite
 		SUtil.check();
 	
 		ClientPrefs.loadDefaultKeys();
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
 
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
