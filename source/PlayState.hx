@@ -183,11 +183,11 @@ class PlayState extends MusicBeatState
 	public var goods:Int = 0;
 	public var bads:Int = 0;
 	public var shits:Int = 0;
-	public var sicksPercent:Float;
-	public var goodsPercent:Float = 0;
-	public var badsPercent:Float = 0;
-	public var shitsPercent:Float = 0;
-	public var missesPercent:Float = 0;
+	public var sicksPercent:Float  = 0 + (sicks / noteHit);;
+	public var goodsPercent:Float = 0 + (goods / noteHit);;
+	public var badsPercent:Float = 0 + (bads / noteHit);;
+	public var shitsPercent:Float = 0 + (shitsPercent / noteHit);;
+	public var missesPercent:Float = 0 + (songMisses / noteHit);
 	public var noteHit:Int = 0;
 
 	private var generatedMusic:Bool = false;
@@ -1201,7 +1201,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.borderQuality = 2;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.screenCenter(Y);
-		
+		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${songMisses}';
 		if (ClientPrefs.judgementCounter == true)
 		{
 			add(judgementCounter);
@@ -1209,10 +1209,6 @@ class PlayState extends MusicBeatState
 		if (ClientPrefs.judgementCounterType == 'Percent')
 		{
 		    judgementCounter.text = 'Sick: ${Highscore.floorDecimal(sicksPercent * 100, 2)}% \nGood: ${Highscore.floorDecimal(goodsPercent * 100, 2)}% \nBad: ${Highscore.floorDecimal(badsPercent * 100, 2)}% \nShit: ${Highscore.floorDecimal(shitsPercent * 100, 2)}% \nMiss: ${Highscore.floorDecimal(missesPercent * 100, 2)}%';
-		}
-		if (ClientPrefs.judgementCounterType == 'Default')
-		{
-		    judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${songMisses}';
 		}
 
 		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "AUTOPLAY", 32);
@@ -4657,9 +4653,6 @@ class PlayState extends MusicBeatState
 				combo += 1;
 				noteHit += 1;
 				
-				if (noteHit > combo)
-				noteHit = combo;
-				
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}
@@ -5161,7 +5154,6 @@ class PlayState extends MusicBeatState
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
-        judgementCounter.text = 'Sick: ${Highscore.floorDecimal(sicksPercent * 100, 2)}% \nGood: ${Highscore.floorDecimal(goodsPercent * 100, 2)}% \nBad: ${Highscore.floorDecimal(badsPercent * 100, 2)}% \nShit: ${Highscore.floorDecimal(shitsPercent * 100, 2)}% \nMiss: ${Highscore.floorDecimal(missesPercent * 100, 2)}%';
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop)
 		{
@@ -5171,16 +5163,6 @@ class PlayState extends MusicBeatState
 			{
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-				// Sick Percent
-				sicksPercent = 0 + (sicks / noteHit);
-				// Good Percent
-				goodsPercent = 0 + (goods / noteHit);
-				// Bad Percent
-				badsPercent = 0 + (bads / noteHit);
-				// shitsPercent
-				shitsPercent = 0 + (shitsPercent / noteHit);
-				// Misses Percent
-				missesPercent = 0 + (songMisses / noteHit);
 				//trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
 
 				// Rating Name
