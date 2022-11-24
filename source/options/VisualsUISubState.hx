@@ -132,7 +132,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		#end
         
-        var option:Option = new Option('Check for Updates',
+        var option:Option = new Option('Winning icons',
 			'Show winning icons',
 			'winIcon',
 			'bool',
