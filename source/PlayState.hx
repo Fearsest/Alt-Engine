@@ -183,10 +183,10 @@ class PlayState extends MusicBeatState
 	public var goods:Int = 0;
 	public var bads:Int = 0;
 	public var shits:Int = 0;
-	public var sicksPercent:Float  = 0 + (sicks / noteHit);;
-	public var goodsPercent:Float = 0 + (goods / noteHit);;
-	public var badsPercent:Float = 0 + (bads / noteHit);;
-	public var shitsPercent:Float = 0 + (shitsPercent / noteHit);;
+	public var sicksPercent:Float  = 0 + (sicks / noteHit);
+	public var goodsPercent:Float = 0 + (goods / noteHit);
+	public var badsPercent:Float = 0 + (bads / noteHit);
+	public var shitsPercent:Float = 0 + (shitsPercent / noteHit);
 	public var missesPercent:Float = 0 + (songMisses / noteHit);
 	public var noteHit:Int = 0;
 
