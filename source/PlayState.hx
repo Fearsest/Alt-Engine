@@ -179,6 +179,7 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = [];
+	public var noteHit:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
 	public var bads:Int = 0;
