@@ -21,6 +21,10 @@ class ClientPrefs {
 	public static var violence:Bool = true;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
+	public static var vocalVolume:Float = 1;
+	public static var instVolume:Float = 1;
+	public static var mainVolume:Float = 1;
+	public static var winIcon:Bool = false;
 	public static var noteOffset:Int = 0;
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	public static var ghostTapping:Bool = true;
@@ -109,6 +113,10 @@ class ClientPrefs {
 		FlxG.save.data.camZooms = camZooms;
 		FlxG.save.data.noteOffset = noteOffset;
 		FlxG.save.data.hideHud = hideHud;
+		FlxG.save.data.vocalVolume = vocalVolume;
+		FlxG.save.data.instVolume = instVolume;
+		FlxG.save.data.mainVolume = mainVolume;
+		FlxG.save.data.winIcon = winIcon;
 		FlxG.save.data.arrowHSV = arrowHSV;
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.timeBarType = timeBarType;
@@ -192,6 +200,24 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.hideHud != null) {
 			hideHud = FlxG.save.data.hideHud;
+		}
+		if(FlxG.save.data.vocalVolume != null) {
+			vocalVolume = FlxG.save.data.vocalVolume;
+		}
+		if(FlxG.save.data.instVolume != null) {
+			instVolume = FlxG.save.data.instVolume;
+		}
+		if(FlxG.save.data.mainVolume != null) {
+			mainVolume = FlxG.save.data.mainVolume;
+		}
+		if(FlxG.save.data.winIcon != null) {
+			winIcon = FlxG.save.data.winIcon;
+		}
+		if(FlxG.save.data.instVolume != null) {
+			instVolume = FlxG.save.data.instVolume;
+		}
+		if(FlxG.save.data.vocalVolume != null) {
+			vocalVolume = FlxG.save.data.vocalVolume;
 		}
 		if(FlxG.save.data.noteOffset != null) {
 			noteOffset = FlxG.save.data.noteOffset;
