@@ -183,6 +183,12 @@ class PlayState extends MusicBeatState
 	public var goods:Int = 0;
 	public var bads:Int = 0;
 	public var shits:Int = 0;
+	public var sicksPercent:Float;
+	public var goodsPercent:Float = 0;
+	public var badsPercent:Float = 0;
+	public var shitsPercent:Float = 0;
+	public var missesPercent:Float = 0;
+	public var noteHit:Int = 0;
 
 	private var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -258,6 +264,7 @@ class PlayState extends MusicBeatState
 	public var songHits:Int = 0;
 	public var songMisses:Int = 0;
 	public var scoreTxt:FlxText;
+	var judgementCounter:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
 
@@ -1187,8 +1194,28 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderSize = 1.25;
 		scoreTxt.visible = !ClientPrefs.hideHud;
 		add(scoreTxt);
+		
+		judgementCounter = new FlxText(20, 0, 0, "", 20);
+		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementCounter.borderSize = 2;
+		judgementCounter.borderQuality = 2;
+		judgementCounter.scrollFactor.set();
+		judgementCounter.screenCenter(Y);
+		
+		if (ClientPrefs.judgementCounter == true)
+		{
+			add(judgementCounter);
+		}
+		if (ClientPrefs.judgementCounterType == 'Percent')
+		{
+		    judgementCounter.text = 'Sick: ${Highscore.floorDecimal(sicksPercent * 100, 2)}% \nGood: ${Highscore.floorDecimal(goodsPercent * 100, 2)}% \nBad: ${Highscore.floorDecimal(badsPercent * 100, 2)}% \nShit: ${Highscore.floorDecimal(shitsPercent * 100, 2)}% \nMiss: ${Highscore.floorDecimal(missesPercent * 100, 2)}%';
+		}
+		if (ClientPrefs.judgementCounterType == 'Default')
+		{
+		    judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
+		}
 
-		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
+		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "AUTOPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
@@ -1206,6 +1233,7 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		judgementCounter.cameras = [camHUD];
 		botplayTxt.cameras = [camHUD];
 		timeBar.cameras = [camHUD];
 		timeBarBG.cameras = [camHUD];
@@ -4627,6 +4655,11 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
+				noteHit += 1;
+				
+				if (noteHit > combo)
+				noteHit = combo;
+				
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}
@@ -5128,16 +5161,26 @@ class PlayState extends MusicBeatState
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
-
+        judgementCounter.text = 'Sick: ${Highscore.floorDecimal(sicksPercent * 100, 2)}% \nGood: ${Highscore.floorDecimal(goodsPercent * 100, 2)}% \nBad: ${Highscore.floorDecimal(badsPercent * 100, 2)}% \nShit: ${Highscore.floorDecimal(shitsPercent * 100, 2)}% \nMiss: ${Highscore.floorDecimal(missesPercent * 100, 2)}%';
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop)
 		{
 			if(totalPlayed < 1) //Prevent divide by 0
-				ratingName = '?';
+				ratingName = '[N/A]';
 			else
 			{
 				// Rating Percent
 				ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
+				// Sick Percent
+				sicksPercent = 0 + (sicks / noteHit);
+				// Good Percent
+				goodsPercent = 0 + (goods / noteHit);
+				// Bad Percent
+				badsPercent = 0 + (bads / noteHit);
+				// shitsPercent
+				shitsPercent = 0 + (shitsPercent / noteHit);
+				// Misses Percent
+				missesPercent = 0 + (songMisses / noteHit);
 				//trace((totalNotesHit / totalPlayed) + ', Total: ' + totalPlayed + ', notes hit: ' + totalNotesHit);
 
 				// Rating Name
