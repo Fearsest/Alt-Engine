@@ -179,16 +179,16 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = [];
-        public var noteHit:Int = 0;
+    public var noteHit:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
 	public var bads:Int = 0;
 	public var shits:Int = 0;
-	public var sicksPercent:Float  = 0 + (sicks / noteHit);
-	public var goodsPercent:Float = 0 + (goods / noteHit);
-	public var badsPercent:Float = 0 + (bads / noteHit);
-	public var shitsPercent:Float = 0 + (shitsPercent / noteHit);
-	public var missesPercent:Float = 0 + (songMisses / noteHit);
+	public var sicksPercent:Float  = 0;
+	public var goodsPercent:Float = 0;
+	public var badsPercent:Float = 0;
+	public var shitsPercent:Float = 0;
+	public var missesPercent:Float = 0;
 
 	private var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -5154,6 +5154,12 @@ class PlayState extends MusicBeatState
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
+		// Combo Percent
+		sicksPercent = (sick / noteHit);
+		goodsPercent = (good / noteHit);
+		badsPercent = (bad / noteHit);
+		shitsPercent = (shit / noteHit);
+		
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop)
 		{
