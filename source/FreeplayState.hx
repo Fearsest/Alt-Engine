@@ -18,11 +18,34 @@ import lime.utils.Assets;
 import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import WeekData;
+import haxe.Json;
+import flixel.util.FlxStringUtil;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
 
 using StringTools;
+typedef FreePlayData =
+{
+    FreeplayScoreText:String,
+    SongTextP:Array<Int>,
+    SongAlpha:Float,
+    SongSelectedAlpha:Float,
+    FreeplayScoreBGPos:Array<Int>,
+    FreeplayScoreBGScale:Array<Float>,
+    ScoreTextP:Array<Int>,
+    FreeplayScoreTextSize:Int,
+    DiffTextP:Array<Int>,
+    FreeplayBG:String,
+    ScoreBGA:Float,
+    DifficultText:Array<String>,
+    DiffSize:Int,
+    IconPos:Array<Int>,
+    iconAlpha:Array<Float>,
+    IconSprTracker:Bool
+}
 
 class FreeplayState extends MusicBeatState
 {
@@ -33,6 +56,11 @@ class FreeplayState extends MusicBeatState
 	var curDifficulty:Int = -1;
 	private static var lastDifficultyName:String = '';
 
+    var timerText:FlxText;
+    var icon:HealthIcon;
+    var songLength:Float = 0;
+    var updateTime:Bool = true;
+    var showTime:Bool = true;
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -40,7 +68,9 @@ class FreeplayState extends MusicBeatState
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
 	var intendedRating:Float = 0;
-
+    var FreeplayJSON:FreePlayData;
+    var songPercent:Float = 0;
+    
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -63,7 +93,8 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
+        FreeplayJSON = Json.parse(Paths.getTextFromFile('UI Jsons/FreeplayJson.json'));
+        
 		for (i in 0...WeekData.weeksList.length) {
 			if(weekIsLocked(WeekData.weeksList[i])) continue;
 
@@ -101,7 +132,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+        bg = new FlxSprite().loadGraphic(Paths.image(FreeplayJSON.FreeplayBG));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
@@ -111,7 +142,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			var songText:Alphabet = new Alphabet(FreeplayJSON.SongTextP[0],FreeplayJSON.SongTextP[1] , songs[i].songName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -130,8 +161,13 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Paths.currentModDirectory = songs[i].folder;
-			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
-			icon.sprTracker = songText;
+            icon = new HealthIcon(songs[i].songCharacter);
+			icon.x = FreeplayJSON.IconPos[0];
+            icon.y = FreeplayJSON.IconPos[1];
+            if(FreeplayJSON.IconSprTracker = true)
+            {
+                icon.sprTracker = songText;
+            }
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -143,14 +179,41 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
-		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+	timerText = new FlxText(500, 19, 400, "", 32);
+	timerText.setFormat(Paths.font("vcr.ttf"), 32, 0xFFFFFFFF, 'center', FlxTextBorderStyle.OUTLINE, 0xFF000000);
+	timerText.scrollFactor.set();
+	timerText.screenCenter(X);
+	timerText.alpha = 0;
+	timerText.borderSize = 2;
+	timerText.visible = showTime;
+	
+	updateTime = showTime;
+	add(timerText);
+	songLength = FlxG.sound.music.length;
+	
+	if(updateTime)
+    {
+    var curTime:Float = Conductor.songPosition - ClientPrefs.noteOffset;
+	if(curTime < 0) curTime = 0;
+	songPercent = (curTime / songLength);
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
-		scoreBG.alpha = 0.6;
+	var songCalc:Float = (songLength = curTime);
+
+	var secondsTotal:Int = Math.floor(songCalc / 1000);
+	if(secondsTotal < 0) secondsTotal = 0;
+	timerText.text = FlxStringUtil.formatTime(secondsTotal, false);
+    }
+    
+        scoreText = new FlxText(FreeplayJSON.ScoreTextP[0],FreeplayJSON.ScoreTextP[1], 0,FreeplayJSON.FreeplayScoreText, FreeplayJSON.FreeplayScoreTextSize);
+		scoreText.setFormat(Paths.font("vcr.ttf"), FreeplayJSON.FreeplayScoreTextSize, FlxColor.WHITE, RIGHT);
+
+		scoreBG = new FlxSprite(FreeplayJSON.FreeplayScoreBGPos[0], FreeplayJSON.FreeplayScoreBGPos[1]).makeGraphic(1, 1,0xFF000000);
+		scoreBG.alpha = FreeplayJSON.ScoreBGA;
+		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
+		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
 		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
+		diffText = new FlxText(FreeplayJSON.DiffTextP[0],FreeplayJSON.DiffTextP[1], 0, "", FreeplayJSON.DiffSize);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -255,6 +318,7 @@ class FreeplayState extends MusicBeatState
 	}*/
 
 	var instPlaying:Int = -1;
+	public static var inst:FlxSound = null;
 	public static var vocals:FlxSound = null;
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
@@ -281,7 +345,7 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
+		scoreText.text = FreeplayJSON.FreeplayScoreText + lerpScore;
 		positionHighscore();
 
 		var upP = controls.UI_UP_P;
@@ -357,6 +421,7 @@ class FreeplayState extends MusicBeatState
 		{
 			if(instPlaying != curSelected)
 			{
+			    FlxTween.tween(timerText, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 				#if PRELOAD_ALL
 				destroyFreeplayVocals();
 				FlxG.sound.music.volume = 0;
@@ -364,16 +429,16 @@ class FreeplayState extends MusicBeatState
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
+				
 					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 				else
 					vocals = new FlxSound();
-
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song),0.7);
 				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
-				vocals.volume = 0.7;
+				vocals.volume = 1;
 				instPlaying = curSelected;
 				#end
 			}
@@ -451,7 +516,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		PlayState.storyDifficulty = curDifficulty;
-		diffText.text = '< ' + CoolUtil.difficultyString() + ' >';
+		diffText.text = FreeplayJSON.DifficultText[0] + CoolUtil.difficultyString() + FreeplayJSON.DifficultText[1];
 		positionHighscore();
 	}
 
@@ -490,22 +555,24 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = 0.6;
+			iconArray[i].alpha = FreeplayJSON.iconAlpha[0];
+                        iconArray[i].animation.curAnim.curFrame = 0; 
 		}
 
-		iconArray[curSelected].alpha = 1;
+                iconArray[curSelected].animation.curAnim.curFrame = 2; 
+		iconArray[curSelected].alpha = FreeplayJSON.iconAlpha[1];
 
 		for (item in grpSongs.members)
 		{
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
+			item.alpha = FreeplayJSON.SongAlpha;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)
 			{
-				item.alpha = 1;
+				item.alpha = FreeplayJSON.SongSelectedAlpha;
 				// item.setGraphicSize(Std.int(item.width));
 			}
 		}
@@ -555,12 +622,15 @@ class FreeplayState extends MusicBeatState
 	}
 
 	private function positionHighscore() {
-		scoreText.x = FlxG.width - scoreText.width - 6;
+		scoreText.x = FreeplayJSON.ScoreTextP[0];
+		scoreText.y = FreeplayJSON.ScoreTextP[1];
 
-		scoreBG.scale.x = FlxG.width - scoreText.x + 6;
-		scoreBG.x = FlxG.width - (scoreBG.scale.x / 2);
-		diffText.x = Std.int(scoreBG.x + (scoreBG.width / 2));
-		diffText.x -= diffText.width / 2;
+		scoreBG.scale.x = FreeplayJSON.FreeplayScoreBGScale[0];
+		scoreBG.scale.y = FreeplayJSON.FreeplayScoreBGScale[1];
+		scoreBG.x = FreeplayJSON.FreeplayScoreBGPos[0];
+		scoreBG.y = FreeplayJSON.FreeplayScoreBGPos[1];
+		diffText.y = FreeplayJSON.DiffTextP[1];
+		diffText.x = FreeplayJSON.DiffTextP[0];
 	}
 }
 
