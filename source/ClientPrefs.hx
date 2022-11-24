@@ -25,6 +25,8 @@ class ClientPrefs {
 	public static var instVolume:Float = 1;
 	public static var mainVolume:Float = 1;
 	public static var winIcon:Bool = false;
+	public static var judgementCounter:Bool = false;
+	public static var judgementCounterType:String = 'Default';
 	public static var noteOffset:Int = 0;
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	public static var ghostTapping:Bool = true;
@@ -117,6 +119,8 @@ class ClientPrefs {
 		FlxG.save.data.instVolume = instVolume;
 		FlxG.save.data.mainVolume = mainVolume;
 		FlxG.save.data.winIcon = winIcon;
+		FlxG.save.data.judgementCounter = judgementCounter;
+		FlxG.save.data.judgementCounterType = judgementCounterType;
 		FlxG.save.data.arrowHSV = arrowHSV;
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.timeBarType = timeBarType;
@@ -213,11 +217,11 @@ class ClientPrefs {
 		if(FlxG.save.data.winIcon != null) {
 			winIcon = FlxG.save.data.winIcon;
 		}
-		if(FlxG.save.data.instVolume != null) {
-			instVolume = FlxG.save.data.instVolume;
+        if(FlxG.save.data.judgementCounter != null) {
+			judgementCounter = FlxG.save.data.judgementCounter;
 		}
-		if(FlxG.save.data.vocalVolume != null) {
-			vocalVolume = FlxG.save.data.vocalVolume;
+		if(FlxG.save.data.judgementCounterType != null) {
+			judgementCounterType = FlxG.save.data.judgementCounterType;
 		}
 		if(FlxG.save.data.noteOffset != null) {
 			noteOffset = FlxG.save.data.noteOffset;
@@ -243,7 +247,6 @@ class ClientPrefs {
 		if(FlxG.save.data.comboOffset != null) {
 			comboOffset = FlxG.save.data.comboOffset;
 		}
-		
 		if(FlxG.save.data.ratingOffset != null) {
 			ratingOffset = FlxG.save.data.ratingOffset;
 		}
