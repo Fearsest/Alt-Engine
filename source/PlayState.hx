@@ -5155,10 +5155,10 @@ class PlayState extends MusicBeatState
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
 		// Combo Percent
-		sicksPercent = (sick / noteHit);
-		goodsPercent = (good / noteHit);
-		badsPercent = (bad / noteHit);
-		shitsPercent = (shit / noteHit);
+		sicksPercent = (sicks / noteHit);
+		goodsPercent = (goods / noteHit);
+		badsPercent = (bads / noteHit);
+		shitsPercent = (shits / noteHit);
 		
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop)
