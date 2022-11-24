@@ -1,3 +1,5 @@
+package;
+
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -11,6 +13,8 @@ import flixel.addons.effects.FlxTrail;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import flixel.effects.FlxFlicker;
+import flixel.ui.FlxBar;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -54,7 +58,7 @@ import Discord;
 #end
 
 #if android
-import android.Hardware;
+import android.Tools;
 #end
 
 using StringTools;
@@ -126,6 +130,9 @@ class FunkinLua {
 		set('songLength', FlxG.sound.music.length);
 		set('songName', PlayState.SONG.song);
 		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
+                set('winIcons',ClientPrefs.winIcon);
+                set('instVolume',ClientPrefs.instVolume);
+                set('vocalVolume',ClientPrefs.vocalVolume);
 		set('startedCountdown', false);
 
 		set('isStoryMode', PlayState.isStoryMode);
@@ -224,7 +231,31 @@ class FunkinLua {
 		#else
 		set('buildTarget', 'unknown');
 		#end
+		
+		Lua_helper.add_callback(lua, "openCustomSubstate", function(name:String, pauseGame:Bool = false) {
+			if(pauseGame)
+			{
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.pause();
+					PlayState.instance.vocals.pause();
+				}
+			}
+			PlayState.instance.openSubState(new CustomSubstate(name));
+		});
 
+		Lua_helper.add_callback(lua, "closeCustomSubstate", function() {
+			if(CustomSubstate.instance != null)
+			{
+				PlayState.instance.closeSubState();
+				CustomSubstate.instance = null;
+				return true;
+			}
+			return false;
+		});
+		
 		// shader shit
 		Lua_helper.add_callback(lua, "initLuaShader", function(name:String, glslVersion:Int = 120) {
 			if(!ClientPrefs.shaders) return false;
@@ -2353,7 +2384,7 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "vibration", function(milliseconds:Int) {
 			#if android
-			Hardware.vibrate(milliseconds);
+			Tools.vibrate(milliseconds);
 			#end
 		});
 
@@ -2785,6 +2816,7 @@ class FunkinLua {
 			haxeInterp.variables.set('FlxCamera', FlxCamera);
 			haxeInterp.variables.set('FlxTween', FlxTween);
 			haxeInterp.variables.set('FlxEase', FlxEase);
+            haxeInterp.variables.set('FlxFlicker',FlxFlicker);
 			haxeInterp.variables.set('PlayState', PlayState);
 			haxeInterp.variables.set('game', PlayState.instance);
 			haxeInterp.variables.set('Paths', Paths);
@@ -2792,6 +2824,12 @@ class FunkinLua {
 			haxeInterp.variables.set('ClientPrefs', ClientPrefs);
 			haxeInterp.variables.set('Character', Character);
 			haxeInterp.variables.set('Alphabet', Alphabet);
+			haxeInterp.variables.set('CustomSubstate', CustomSubstate);
+			#if android
+			haxeInterp.variables.set('MusicBeatSubstate',MusicBeatSubstate);
+			#end
+			haxeInterp.variables.set('FlxBar',FlxBar);
+			
 			#if !flash
 			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
 			haxeInterp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
@@ -3333,5 +3371,39 @@ class DebugLuaText extends FlxText
 		disableTime -= elapsed;
 		if(disableTime < 0) disableTime = 0;
 		if(disableTime < 1) alpha = disableTime;
+	}
+}
+class CustomSubstate extends MusicBeatSubstate
+{
+	public static var name:String = 'unnamed';
+	public static var instance:CustomSubstate;
+
+	override function create()
+	{
+		instance = this;
+
+		PlayState.instance.callOnLuas('onCustomSubstateCreate', [name]);
+		super.create();
+		PlayState.instance.callOnLuas('onCustomSubstateCreatePost', [name]);
+	}
+
+	public function new(name:String)
+	{
+		CustomSubstate.name = name;
+		super();
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+	}
+
+	override function update(elapsed:Float)
+	{
+		PlayState.instance.callOnLuas('onCustomSubstateUpdate', [name, elapsed]);
+		super.update(elapsed);
+		PlayState.instance.callOnLuas('onCustomSubstateUpdatePost', [name, elapsed]);
+	}
+
+	override function destroy()
+	{
+		PlayState.instance.callOnLuas('onCustomSubstateDestroy', [name]);
+		super.destroy();
 	}
 }
