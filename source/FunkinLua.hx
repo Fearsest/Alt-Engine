@@ -1,5 +1,3 @@
-package;
-
 #if LUA_ALLOWED
 import llua.Lua;
 import llua.LuaL;
@@ -51,7 +49,6 @@ import DialogueBoxPsych;
 #if hscript
 import hscript.Parser;
 import hscript.Interp;
-import hscript.Expr;
 #end
 
 #if desktop
@@ -81,7 +78,7 @@ class FunkinLua {
 	public var closed:Bool = false;
 
 	#if hscript
-	public static var hscript:HScript = null;
+	public static var haxeInterp:Interp = null;
 	#end
 	
 	public function new(script:String) {
@@ -107,14 +104,11 @@ class FunkinLua {
 				lua = null;
 				return;
 			}
-		} catch(e:Dynamic) {
+		}catch(e:Dynamic){
 			trace(e);
 			return;
 		}
 		scriptName = script;
-		
-		initHaxeModule();
-		
 		trace('lua file loaded succesfully:' + script);
 
 		// Lua shit
@@ -874,35 +868,35 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "runHaxeCode", function(codeToRun:String) {
-		var retVal:Dynamic = null;
+			#if hscript
+			initHaxeInterp();
 
-        #if hscript
-		initHaxeModule();
 			try {
-				retVal = hscript.execute(codeToRun);
+				var myFunction:Dynamic = haxeInterp.expr(new Parser().parseString(codeToRun));
+				myFunction();
 			}
 			catch (e:Dynamic) {
-				luaTrace(scriptName + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				switch(e)
+				{
+					case 'Null Function Pointer', 'SReturn':
+						//nothing
+					default:
+						luaTrace(scriptName.replace(SUtil.getPath(), "") + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
+				}
 			}
-			#else
-			luaTrace("HScript isn't supported on this platform!", false, false, FlxColor.RED);
 			#end
-			
-			if(retVal != null && !isOfTypes(retVal, [Bool, Int, Float, String, Array])) retVal = null;
-			if(retVal == null) Lua.pushnil(lua);
-			return retVal;
 		});
 
 		Lua_helper.add_callback(lua, "addHaxeLibrary", function(libName:String, ?libPackage:String = '') {
 			#if hscript
-			initHaxeModule();
+			initHaxeInterp();
 
 			try {
 				var str:String = '';
 				if(libPackage.length > 0)
 					str = libPackage + '.';
 
-				hscript.variables.set(libName, Type.resolveClass(str + libName));
+				haxeInterp.variables.set(libName, Type.resolveClass(str + libName));
 			}
 			catch (e:Dynamic) {
 				luaTrace(scriptName.replace(SUtil.getPath(), "") + ":" + lastCalledFunction + " - " + e, false, false, FlxColor.RED);
@@ -2809,21 +2803,47 @@ class FunkinLua {
 		#end
 	}
 
-    public function isOfTypes(value:Any, types:Array<Dynamic>)
+	#if hscript
+	public function initHaxeInterp()
 	{
-		for (type in types)
+		if(haxeInterp == null)
 		{
-			if(Std.isOfType(value, type)) return true;
-		}
-		return false;
-	}
-    #if hscript
-	public function initHaxeModule()
-	{
-		if(hscript == null)
-		{
-			trace('initializing haxe interp for: $scriptName');
-			hscript = new HScript(); //TO DO: Fix issue with 2 scripts not being able to use the same variable names
+			haxeInterp = new Interp();
+			haxeInterp.variables.set('FlxG', FlxG);
+			haxeInterp.variables.set('FlxSprite', FlxSprite);
+			haxeInterp.variables.set('FlxCamera', FlxCamera);
+			haxeInterp.variables.set('FlxTween', FlxTween);
+			haxeInterp.variables.set('FlxEase', FlxEase);
+            haxeInterp.variables.set('FlxFlicker',FlxFlicker);
+			haxeInterp.variables.set('PlayState', PlayState);
+			haxeInterp.variables.set('game', PlayState.instance);
+			haxeInterp.variables.set('Paths', Paths);
+			haxeInterp.variables.set('Conductor', Conductor);
+			haxeInterp.variables.set('ClientPrefs', ClientPrefs);
+			haxeInterp.variables.set('Character', Character);
+			haxeInterp.variables.set('Alphabet', Alphabet);
+			haxeInterp.variables.set('CustomSubstate', CustomSubstate);
+			#if android
+			haxeInterp.variables.set('MusicBeatSubstate',MusicBeatSubstate);
+			#end
+			haxeInterp.variables.set('FlxBar',FlxBar);
+			
+			#if !flash
+			haxeInterp.variables.set('FlxRuntimeShader', FlxRuntimeShader);
+			haxeInterp.variables.set('ShaderFilter', openfl.filters.ShaderFilter);
+			#end
+			haxeInterp.variables.set('StringTools', StringTools);
+			haxeInterp.variables.set('SUtil', SUtil);// this is more like for android because filesaving needs it
+
+			haxeInterp.variables.set('setVar', function(name:String, value:Dynamic)
+			{
+				PlayState.instance.variables.set(name, value);
+			});
+			haxeInterp.variables.set('getVar', function(name:String)
+			{
+				if(!PlayState.instance.variables.exists(name)) return null;
+				return PlayState.instance.variables.get(name);
+			});
 		}
 	}
 	#end

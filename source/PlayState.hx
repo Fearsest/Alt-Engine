@@ -179,7 +179,6 @@ class PlayState extends MusicBeatState
 	public var timeBar:FlxBar;
 
 	public var ratingsData:Array<Rating> = [];
-    public var noteHit:Int = 0;
 	public var sicks:Int = 0;
 	public var goods:Int = 0;
 	public var bads:Int = 0;
@@ -1211,7 +1210,7 @@ class PlayState extends MusicBeatState
 		    judgementCounter.text = 'Sick: ${Highscore.floorDecimal(sicksPercent * 100, 2)}% \nGood: ${Highscore.floorDecimal(goodsPercent * 100, 2)}% \nBad: ${Highscore.floorDecimal(badsPercent * 100, 2)}% \nShit: ${Highscore.floorDecimal(shitsPercent * 100, 2)}% \nMiss: ${Highscore.floorDecimal(missesPercent * 100, 2)}%';
 		}
 
-		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "AUTOPLAY", 32);
+		botplayTxt = new FlxText(400, timeBarBG.y + 55, FlxG.width - 800, "BOTPLAY", 32);
 		botplayTxt.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botplayTxt.scrollFactor.set();
 		botplayTxt.borderSize = 1.25;
@@ -4651,8 +4650,6 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
-				noteHit += 1;
-				
 				if(combo > 9999) combo = 9999;
 				popUpScore(note);
 			}
@@ -4936,16 +4933,15 @@ class PlayState extends MusicBeatState
 			lua.stop();
 		}
 		luaArray = [];
-		
-		#if hscript
-		if(FunkinLua.hscript != null) FunkinLua.hscript = null;
-		#end
 
 		if(!ClientPrefs.controllerMode)
 		{
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
+		#if hscript
+		FunkinLua.haxeInterp = null;
+		#end
 		super.destroy();
 	}
 
@@ -5155,17 +5151,17 @@ class PlayState extends MusicBeatState
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
-		// Combo Percent
+
 		sicksPercent = (sicks / noteHit);
 		goodsPercent = (goods / noteHit);
 		badsPercent = (bads / noteHit);
 		shitsPercent = (shits / noteHit);
-		
+
 		var ret:Dynamic = callOnLuas('onRecalculateRating', [], false);
 		if(ret != FunkinLua.Function_Stop)
 		{
 			if(totalPlayed < 1) //Prevent divide by 0
-				ratingName = '[N/A]';
+				ratingName = '?';
 			else
 			{
 				// Rating Percent
@@ -5192,10 +5188,10 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
-			if (sicks > 0) ratingFC = "SFC";
-			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
+			if (sicks > 0) ratingFC = "Sick Full Combo";
+			if (goods > 0) ratingFC = "Good Full Combo";
+			if (bads > 0 || shits > 0) ratingFC = "Full Combo";
+			if (songMisses > 0 && songMisses < 10) ratingFC = "Single Digital Combo Break";
 			else if (songMisses >= 10) ratingFC = "Clear";
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
