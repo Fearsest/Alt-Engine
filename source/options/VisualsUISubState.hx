@@ -55,6 +55,21 @@ class VisualsUISubState extends BaseOptionsMenu
 			'Time Left',
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
+		
+		var option:Option = new Option('judgement Text Type:',
+			"What should the Time Bar display?",
+			'judgementCounterType',
+			'string',
+			'Time Left',
+			['Default', 'Percent']);
+		addOption(option);
+		
+		var option:Option = new Option('Judgement Text Visible',
+			"Show Judgement Text?!",
+			'judgementCounter',
+			'bool',
+			true);
+		addOption(option);
 
 		var option:Option = new Option('Flashing Lights',
 			"Uncheck this if you're sensitive to flashing lights!",
@@ -62,6 +77,8 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
+		
+		
 
 		var option:Option = new Option('Camera Zooms',
 			"If unchecked, the camera won't zoom in on a beat hit.",
@@ -114,7 +131,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 		#end
-
+        
+        var option:Option = new Option('Check for Updates',
+			'Show winning icons',
+			'winIcon',
+			'bool',
+			false);
+		addOption(option);
 		super();
 	}
 
