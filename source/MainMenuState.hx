@@ -3,6 +3,7 @@ package;
 #if desktop
 import Discord.DiscordClient;
 #end
+import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -20,12 +21,37 @@ import lime.app.Application;
 import Achievements;
 import editors.MasterEditorMenu;
 import flixel.input.keyboard.FlxKey;
+import haxe.Json;
+#if MODS_ALLOWED
+import sys.FileSystem;
+import sys.io.File;
+#end
 
 using StringTools;
+typedef MenuData = 
+{
+    storyP:Array<Int>,
+    freeplayP:Array<Int>,
+    modsP:Array<Int>,
+    awardsP:Array<Int>,
+    creditsP:Array<Int>,
+    optionsP:Array<Int>,
+    storyS:Array<Float>,
+    freeplayS:Array<Float>,
+    modsS:Array<Float>,
+    awardsS:Array<Float>,
+    creditsS:Array<Float>,
+    optionsS:Array<Float>,
+    centerX:Bool,
+    menuBG:String,
+    Tweens:Bool
+}
 
 class MainMenuState extends MusicBeatState
 {
+    var MainJSON:MenuData;
 	public static var psychEngineVersion:String = '0.6.2'; //This is also used for Discord RPC
+    public static var altEngineVersion:String = '1.8';
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -38,7 +64,6 @@ class MainMenuState extends MusicBeatState
 		#if MODS_ALLOWED 'mods', #end
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
-		#if !switch 'donate', #end
 		'options'
 	];
 
@@ -49,6 +74,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+        
 		#if MODS_ALLOWED
 		Paths.pushGlobalMods();
 		#end
@@ -72,9 +98,11 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		persistentUpdate = persistentDraw = true;
+		
+		MainJSON = Json.parse(Paths.getTextFromFile('UI Jsons/MainMenuData.json'));
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image(MainJSON.menuBG));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -87,7 +115,7 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta = new FlxSprite(-80).loadGraphic(Paths.image(MainJSON.menuBG));
 		magenta.scrollFactor.set(0, yScroll);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
@@ -102,39 +130,144 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var scale:Float = 1;
+		// var scale:Float = 1;
 		/*if(optionShit.length > 6) {
 			scale = 6 / optionShit.length;
 		}*/
 
-		for (i in 0...optionShit.length)
-		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
+			//StoryMenu
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.storyP[0],MainJSON.storyP[1]);
+			menuItem.scale.x = MainJSON.storyS[0];
+			menuItem.scale.y = MainJSON.storyS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[0]);
+			menuItem.animation.addByPrefix('idle', optionShit[0] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[0] + " white", 24);
 			menuItem.animation.play('idle');
-			menuItem.ID = i;
-			menuItem.screenCenter(X);
+			menuItem.ID = 0;
+                        // menuItem.screenCenter(X)
+            if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
 			menuItems.add(menuItem);
-			var scr:Float = (optionShit.length - 4) * 0.135;
+                        var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
-			menuItem.scrollFactor.set(0, scr);
+			menuItem.scrollFactor.set(0,scr);
 			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
 			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
 			menuItem.updateHitbox();
-		}
+
+			//freeplay
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.freeplayP[0],MainJSON.freeplayP[1]);
+			menuItem.scale.x = MainJSON.freeplayS[0];
+			menuItem.scale.y = MainJSON.freeplayS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[1]);
+			menuItem.animation.addByPrefix('idle', optionShit[1] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[1] + " white", 24);
+			menuItem.animation.play('idle');
+			menuItem.ID = 1;
+                        // menuItem.screenCenter(X);
+            if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
+			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
+			//mods
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.modsP[0],MainJSON.modsP[1]);
+			menuItem.scale.x = MainJSON.modsS[0];
+			menuItem.scale.y = MainJSON.modsS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[2]);
+			menuItem.animation.addByPrefix('idle', optionShit[2] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[2] + " white", 24);
+			menuItem.animation.play('idle');
+			menuItem.ID = 2;
+                        // menuItem.screenCenter(X);
+            if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
+			menuItems.add(menuItem);
+            var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
+			//awards
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.awardsP[0],MainJSON.awardsP[1]);
+			menuItem.scale.x = MainJSON.awardsS[0];
+			menuItem.scale.y = MainJSON.awardsS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[3]);
+			menuItem.animation.addByPrefix('idle', optionShit[3] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[3] + " white", 24);
+			menuItem.animation.play('idle');
+			menuItem.ID = 3;
+			if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
+			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
+			//credits
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.creditsP[0],MainJSON.creditsP[1]);
+			menuItem.scale.x = MainJSON.creditsS[0];
+			menuItem.scale.y = MainJSON.creditsS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[4]);
+			menuItem.animation.addByPrefix('idle', optionShit[4] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[4] + " white", 24);
+			menuItem.animation.play('idle');
+			menuItem.ID = 4;
+                        // menuItem.screenCenter(X);
+            if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
+			menuItems.add(menuItem);
+                        var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
+
+			//options
+			var menuItem:FlxSprite = new FlxSprite(MainJSON.optionsP[0],MainJSON.optionsP[1]);
+			menuItem.scale.x = MainJSON.optionsS[0];
+			menuItem.scale.y = MainJSON.optionsS[1];
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[5]);
+			menuItem.animation.addByPrefix('idle', optionShit[5] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionShit[5] + " white", 24);
+			menuItem.animation.play('idle');
+			menuItem.ID = 5;
+                        // menuItem.screenCenter(X);
+            if(MainJSON.centerX == true) {
+                menuItem.screenCenter(X);
+            }
+			menuItems.add(menuItem);
+			var scr:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6) scr = 0;
+			menuItem.scrollFactor.set(0,scr);
+			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
+			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
+			menuItem.updateHitbox();
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "Psych Engine v" + psychEngineVersion, 12);
+        var versionShit:FlxText = new FlxText(12, FlxG.height - 44, 0, "Alt Engine Version: " + altEngineVersion, 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
+		var versionShit:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' Version: " + Application.current.meta.get('version'), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -177,11 +310,6 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.8)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
-			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
-		}
 
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
@@ -224,13 +352,13 @@ class MainMenuState extends MusicBeatState
 					{
 						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
+							FlxTween.tween(spr, {alpha: 0}, 0.6, {
+							ease: FlxEase.linear,
+							onComplete: function(twn:FlxTween)
+							{
+								spr.kill();
+							}
+						});
 						}
 						else
 						{
@@ -273,7 +401,10 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
+		   //spr.screenCenter(X)
+		    if(MainJSON.centerX == true){
 			spr.screenCenter(X);
+		    }
 		});
 	}
 
