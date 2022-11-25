@@ -24,8 +24,8 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
-import flixel.addons.display.FlxBackdrop;
 import flash.system.System;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -58,11 +58,10 @@ class ExitGame extends MusicBeatState
 		DiscordClient.changePresence("Game Closing Menu", null);
 		#end
 
-        var bg:FlxBackdrop = new FlxBackdrop(Paths.image('loading'), 0.2, 0, true, true);
-		bg.velocity.set(200, 110);
-		bg.alpha = 0.5;
-		bg.updateHitbox();
-
+        var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+        FlxColor.fromHSB(FlxG.random.int(0, 359), FlxG.random.float(0, 0.8), FlxG.random.float(0.3, 1)));
+		bg.scrollFactor.set();
+		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
