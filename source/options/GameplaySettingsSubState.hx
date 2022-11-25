@@ -171,7 +171,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 	{
 		if(ClientPrefs.vibration)
 		{
-			Hardware.vibrate(500);
+			Tools.vibrate(500);
 		}
 	}
 	#end
