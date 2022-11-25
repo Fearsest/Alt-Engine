@@ -58,8 +58,7 @@ class ExitGame extends MusicBeatState
 		DiscordClient.changePresence("Game Closing Menu", null);
 		#end
 
-        var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-        FlxColor.fromHSB(FlxG.random.int(0, 359), FlxG.random.float(0, 0.8), FlxG.random.float(0.3, 1)));
+        var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set();
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.screenCenter();
