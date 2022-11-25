@@ -290,7 +290,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		#if android
-		addVirtualPad(UP_DOWN, A_B_E);
+		addVirtualPad(UP_DOWN, A_B_X_Y);
 		virtualPad.y = -44;
 		#end
 
@@ -389,10 +389,15 @@ class MainMenuState extends MusicBeatState
 				}
 			}
 			#if (desktop || android)
-			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || virtualPad.buttonE.justPressed #end)
+			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || virtualPad.buttonX.justPressed #end)
 			{
 				selectedSomethin = true;
 				MusicBeatState.switchState(new MasterEditorMenu());
+			}
+			else if (FlxG.keys.anyJustPressed(debugKeys) #if android || virtualPad.buttonY.justPressed #end)
+			{
+			    selectedSomethin = true;
+			    MusicBeatState.switchState(new ExitGame());
 			}
 			#end
 		}
